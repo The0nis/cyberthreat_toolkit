@@ -1,13 +1,12 @@
-![ost_logo](https://user-images.githubusercontent.com/44299200/210261186-1f0486a7-79e8-41b6-85f1-9e69915123aa.png)
 
-# OSINT Toolkit
+# CYBER Toolkit
 > **Warning**
 > OSINT Toolkit is not production ready yet. This is an early prototype, that still needs some work to be done. 
 ## A fullstack web application built for security analysts
 
-https://github.com/dev-lu/osint_toolkit/assets/44299200/1d9b16db-cadd-45b8-8e0e-a0d36afbbb48
 
-OSINT Toolkit is a full-stack web application designed to assist security analysts in their work. It combines various functions and services into a single tool, making it easier for analysts to identify potential threats and stay updated with the latest developments in the field of cybersecurity.
+
+Cyber Toolkit is a full-stack web application designed to assist security analysts in their work. It combines various functions and services into a single tool, making it easier for analysts to identify potential threats and stay updated with the latest developments in the field of cybersecurity.
 
 * [Integrated services](#integrated-services)
 * [Features](#features)
@@ -44,35 +43,27 @@ OSINT Toolkit is a full-stack web application designed to assist security analys
 ## Features
 ### Newsfeed
 The Newsfeed module keeps you informed about the latest cybersecurity news by aggregating articles from trusted sources such as Wired, The Hacker News, Security Magazine, Threatpost, TechCrunch Security, and Dark Reading. Stay up-to-date with industry trends and potential threats without having to visit multiple websites or subscribe to numerous newsletters.
-![227624764-ebfc69b5-8a02-4967-af19-2c1196732ffa](https://github.com/dev-lu/osint_toolkit/assets/44299200/8ec3edd0-31e3-41b9-b2c5-049627cd9e53)
+
 
 ### IOC Analyzer
 The IOC Analyzer module helps you analyze different types of indicators of compromise (IOCs) such as IP addresses, hashes, email addresses, domains, and URLs. It leverages services like VirusTotal, AlienVault, AbuseIPDB, and social media platforms like Reddit and Twitter to gather information about the IOCs. The module automatically detects the type of IOC being analyzed and utilizes the appropriate services to provide relevant information, enabling you to identify potential threats and take necessary actions to protect your organization.
-![ioca](https://github.com/dev-lu/osint_toolkit/assets/44299200/8c0fb210-d9ca-4bc3-b5b9-21fa0d9a3ced)
+
 
 ### Email Analyzer
 The Email Analyzer module allows you to analyze .eml files for potential threats. Simply drag and drop an .eml file into the module, and it will parse the file, perform basic security checks, extract indicators of compromise (IOCs), and analyze messages with the help of AI. Analyze the IOCs using various open-source intelligence (OSINT) services, and enhance your organization's email security.
-![ema](https://github.com/dev-lu/osint_toolkit/assets/44299200/4f4c8a5b-348a-4db8-a5f5-15ebc4f2ea87)
 
 ### IOC Extractor
 The IOC Extractor module allows you to extract and organize IOCs from unstructured files using regular expressions (Regex). It automatically removes duplicates, saving you the effort of sorting through the same IOCs multiple times. Simply drop your file containing the IOCs into the tool, and analyze each detected IOC with a single click.
-![ioce](https://github.com/dev-lu/osint_toolkit/assets/44299200/db3072cb-a358-4fa1-81d2-bec8273d7c54)
 
-### Domain monitoring
-The Domain Monitoring module helps you protect your organization from phishing attacks by searching for recently registered domains that match specific patterns. By utilizing the URLScan.io API, you can view screenshots of websites associated with domains without visiting them directly. Additionally, you can check each domain and its resolved IP against multiple threat intelligence services, further enhancing your organization's security.
-![dm](https://github.com/dev-lu/osint_toolkit/assets/44299200/e71c2b38-219c-4e7c-aebb-8df5da06bbfb)
 
-### AI Assistant
-The AI Assistant module provides powerful AI-based solutions for log data analysis, email text analysis, and source code explanation. Leveraging advanced AI algorithms from OpenAI, it helps security experts respond quickly and effectively to potential security threats, protecting their networks and maintaining system integrity.
-<img width="1227" alt="aia" src="https://user-images.githubusercontent.com/44299200/223217940-8a8d1d61-5d74-4fd0-b8b2-d7d1198660cf.png">
 
 ### CVSS Calculator
 The CVSS Calculator module allows you to calculate the CVSS 3.1 score of a vulnerability and export the calculation as a markdown or JSON file.
-![cvss_calc](https://github.com/dev-lu/osint_toolkit/assets/44299200/6700a805-8698-445e-9cfc-e404370f58c0)
+
 
 ### Rules
 The Rules module is a GUI for creating Sigma rules.
-![rules](https://github.com/dev-lu/osint_toolkit/assets/44299200/2422f5f2-7623-4c81-bd29-0ef3fff80067)
+
 
 
 

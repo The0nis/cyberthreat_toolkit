@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import api from "../../api";
 
@@ -12,11 +12,14 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import useTheme from "@mui/material/styles/useTheme";
+import {ColorModeContext} from "../../App"
+
 
 export default function General() {
   const generalSettings = useRecoilValue(generalSettingsState);
   const setGeneralSettings = useSetRecoilState(generalSettingsState);
   const theme = useTheme();
+  const { toggleColorMode } = useContext(ColorModeContext);
 
   function handleFontChange(event) {
     try {
@@ -90,7 +93,8 @@ export default function General() {
           control={
             <Switch
               checked={generalSettings.darkmode}
-              onChange={() => handleDarkmodeChange()}
+              // onChange={() => handleDarkmodeChange()}
+              onChange={toggleColorMode}
             />
           }
           label="Darkmode"

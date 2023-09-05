@@ -171,7 +171,6 @@
 //   );
 // }
 
-
 import React from "react";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -189,18 +188,15 @@ import Settings from "./components/settings/Settings";
 
 import Box from "@mui/material/Box";
 import CalculateIcon from "@mui/icons-material/Calculate";
-import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
 import MailIcon from "@mui/icons-material/Mail";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import { Paper } from "@mui/material";
-import PsychologyIcon from "@mui/icons-material/Psychology";
 import RuleIcon from "@mui/icons-material/Rule";
 import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Sigma from "./components/rule-creator/Sigma";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import CvssCalculator from "./components/cvss-calculator/CvssCalculator";
 
 export default function Main() {
@@ -213,12 +209,7 @@ export default function Main() {
       return 1;
     } else if (modules["Email Analyzer"].enabled) {
       return 2;
-    } 
-    //else if (modules["IOC Extractor"].enabled) {
-    //   return 3;
-    // }  else if (modules["AI Assistant"].enabled) {
-    //   return 4;
-    // } 
+    }
     else if (modules["CVSS Calculator"].enabled) {
       return 3;
     } else if (modules["Rules"].enabled) {
@@ -284,27 +275,17 @@ export default function Main() {
           ) : null}
           {modules["IOC Analyzer"].enabled ? (
             <Tab value={1} icon={<SearchIcon />} label="IOC Analyzer" />
-          ) :  <Tab value={1} icon={<SearchIcon />} label="IOC Analyzer" />}
+          ) : (
+            <Tab value={1} icon={<SearchIcon />} label="IOC Analyzer" />
+          )}
           {modules["Email Analyzer"].enabled ? (
             <Tab value={2} icon={<MailIcon />} label="Email Analyzer" />
           ) : null}
-          {/* {modules["IOC Extractor"].enabled ? (
-            <Tab
-              value={3}
-              icon={<DocumentScannerIcon />}
-              label="IOC Extractor"
-            />
-          ) :   <Tab
-          value={3}
-          icon={<DocumentScannerIcon />}
-          label="IOC Extractor"
-        />} */}
-          {/* {modules["AI Assistant"].enabled ? (
-            <Tab value={4} icon={<PsychologyIcon />} label="AI Assistant" />
-          ) : null} */}
           {modules["CVSS Calculator"].enabled ? (
             <Tab value={3} icon={<CalculateIcon />} label="CVSS Calculator" />
-          ) : <Tab value={3} icon={<CalculateIcon />} label="CVSS Calculator" />}
+          ) : (
+            <Tab value={3} icon={<CalculateIcon />} label="CVSS Calculator" />
+          )}
           {modules["Rules"].enabled ? (
             <Tab value={4} icon={<RuleIcon />} label="Rules" />
           ) : null}
@@ -321,15 +302,6 @@ export default function Main() {
       <TabPanel value={value} index={2}>
         <EmailAnalyzer />
       </TabPanel>
-      {/* <TabPanel value={value} index={3}>
-        <Extractor />
-      </TabPanel> */}
-      {/* <TabPanel value={value} index={4}>
-        <Monitoring />
-      </TabPanel> */}
-      {/* <TabPanel value={value} index={4}>
-        <AiAssistant />
-      </TabPanel> */}
       <TabPanel value={value} index={3}>
         <CvssCalculator />
       </TabPanel>

@@ -1,18 +1,6 @@
-sql_app.db
-sql_app*
-data/
-*.db
-__pycache__
-__pycache__/
-*.py[cod]
-*$py.class
-.DS_Store
 
-# C extensions
-*.so
 
 # Distribution / packaging
-.Python
 build/
 develop-eggs/
 dist/
