@@ -1,0 +1,10 @@
+{
+  "name": "cyberthreat_toolkit",
+  "version": "1.0.0",
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  },
+  "scripts": {
+    "start": "concurrently \"cd frontend && npm start\" \"cd backend && node app\""
+  }
+}
