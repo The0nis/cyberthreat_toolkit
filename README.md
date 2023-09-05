@@ -1,7 +1,7 @@
 
 # CYBER Toolkit
 > **Warning**
-> OSINT Toolkit is not production ready yet. This is an early prototype, that still needs some work to be done. 
+> CYBER Toolkit is not production ready yet. This is an early prototype, that still needs some work to be done. 
 ## A fullstack web application built for security analysts
 
 
@@ -69,7 +69,7 @@ The Rules module is a GUI for creating Sigma rules.
 
 ### Customizable
 Customize the descriptions of each module with your own markdown-formatted text. Disable any modules that are not needed, and they will not be shown. Tailor the toolkit to your specific requirements.
-<img width="1233" alt="settings" src="https://user-images.githubusercontent.com/44299200/223217991-1bd45aee-a8ea-4bfc-a3fa-1723fee75c73.png">
+
 
 ## Planned features for later versions
 - Add more OSINT services
