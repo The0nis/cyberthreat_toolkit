@@ -8,7 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import Main from "./Main";
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+export const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 // Recoil state for API keys
 export const apiKeysState = atom({
