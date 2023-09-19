@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import api from "../../api";
 import he from "he";
+import axios from "axios";
 
 import { newsfeedState } from "../../App";
 
-import { Avatar } from "@mui/material";
+import { Avatar, Box, CardContent, CardMedia } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grow from "@mui/material/Grow";
@@ -15,6 +16,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 import useTheme from "@mui/material/styles/useTheme";
+import keys from "../../config/keys";
 
 export default function Newsfeed() {
   const theme = useTheme();
@@ -22,7 +24,7 @@ export default function Newsfeed() {
   const newsfeed = useRecoilValue(newsfeedState);
   const setNewsfeed = useSetRecoilState(newsfeedState);
 
-  const [result, setResult] = useState(" ");
+  const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = React.useState(1);
@@ -38,6 +40,8 @@ export default function Newsfeed() {
       behavior: "smooth", // use 'auto' for instant scrolling
     });
   };
+
+  console.log("result");
 
   const showSkeletons = () => {
     return [...Array(pageSize)].map((e, i) => (
@@ -101,26 +105,27 @@ export default function Newsfeed() {
       setNewsfeed([]);
       setPage(1);
 
-      const url = "/api/newsfeed";
-      api.get(url).then((response) => {
-        const result = response.data;
-        setResult(result);
-        setNewsfeed(result);
-        setLoading(false);
-      });
-    } catch (e) {
-      console.log(e);
+      const result = await axios.get(
+        // `https://newsapi.org/v2/everything?q=tesla&from=2023-08-19&sortBy=publishedAt&apiKey=${keys.REACT_APP_API_KEY}`
+      );
+      // Handle the response data
+      // console.log(result.data);
+      setResult(result.data.articles);
+      setLoading(false);
+    } catch (error) {
+      // Handle errors
+      console.error("An error occurred:", error);
     }
   };
 
+  // console.log(keys.REACT_APP_API_KEY)
+
   useEffect(() => {
-    if (newsfeed.length === 0) {
+    if (result.length === 0) {
+      setLoading(true);
       fetchData();
     }
-    if (newsfeed.length > 0) {
-      setResult(newsfeed);
-      setLoading(false);
-    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,7 +139,7 @@ export default function Newsfeed() {
       <br />
       {loading ? (
         <>{showSkeletons()}</>
-      ) : result.length > 0 ? (
+      ) : result?.length > 0 ? (
         result
           .slice((page - 1) * pageSize, page * pageSize) // slice list of items to get items for current page
           .map((item, index) => {
@@ -153,25 +158,25 @@ export default function Newsfeed() {
                   <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
                     <Avatar
                       alt={`${item.title} icon`}
-                      src={`feedicons/${item.icon}.png`}
+                      src={item.urlToImage}
                       sx={{ width: 45, height: 45 }}
                     />
                     <Stack>
-                      <b>{item.feedname}</b>
-                      {item.date}
+                      <b>{item.author}</b>
+                      {item.publishedAt}
                     </Stack>
                   </Stack>
                   <h2>{item.title}</h2>
                   <p>
-                    {item.summary
-                      ? he.decode(item.summary)
+                    {item.content
+                      ? he.decode(item.content)
                       : "No summary available for this article."}
                   </p>
                   <br />
                   <Button
                     sx={{ borderRadius: 5 }}
                     disableElevation
-                    href={item.link}
+                    href={item.url}
                     target="_blank"
                   >
                     Go to article
