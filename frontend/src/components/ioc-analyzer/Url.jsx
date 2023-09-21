@@ -82,7 +82,7 @@ export default function Url(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {apiKeys.checkphishai ? (
+                  {/* {apiKeys.checkphishai ? (
                     <Checkphish ioc={props.ioc} type="url" />
                   ) : (
                     <></>
@@ -96,13 +96,13 @@ export default function Url(props) {
                     <Safebrowsing ioc={props.ioc} type="domain" />
                   ) : (
                     <></>
-                  )}
+                  )} */}
                   {apiKeys.virustotal ? (
                     <Virustotal ioc={props.ioc} type="domain" />
                   ) : (
                     <></>
                   )}
-                  {apiKeys.reddit_cid && apiKeys.reddit_cs ? (
+                  {/* {apiKeys.reddit_cid && apiKeys.reddit_cs ? (
                     <Reddit ioc={props.ioc} />
                   ) : (
                     <></>
@@ -111,7 +111,7 @@ export default function Url(props) {
                     <Twitter ioc={props.ioc} />
                   ) : (
                     <></>
-                  )}
+                  )} */}
                 </TableBody>
               </Table>
             </TableContainer>

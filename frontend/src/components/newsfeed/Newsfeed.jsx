@@ -106,7 +106,7 @@ export default function Newsfeed() {
       setPage(1);
 
       const result = await axios.get(
-        // `https://newsapi.org/v2/everything?q=tesla&from=2023-08-19&sortBy=publishedAt&apiKey=${keys.REACT_APP_API_KEY}`
+        `https://newsapi.org/v2/everything?q=tesla&from=2023-08-19&sortBy=publishedAt&apiKey=${keys.REACT_APP_API_KEY}`
       );
       // Handle the response data
       // console.log(result.data);
