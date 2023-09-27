@@ -13,30 +13,17 @@ import {
 } from "@mui/material";
 import useTheme from "@mui/material/styles/useTheme";
 
-import Emailrepio from "./services/email/Emailrepio";
-import Github from "./services/multi/Github";
-import Haveibeenpwnd from "./services/email/Haveibeenpwnd";
-import Hunterio from "./services/email/Hunterio";
-import Reddit from "./services/Reddit";
-import Twitter from "./services/Twitter";
-
-import { apiKeysState } from "../../App";
 import NoApikeys from "./NoApikeys";
+import keys from "../../config/keys";
+import Virustotal from "./services/multi/Virustotal";
 
 export default function Email(props) {
   const theme = useTheme();
-  const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = useRecoilValue(apiKeysState);
+  const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL;
 
   function showResult() {
-    if (
-      !apiKeys.github &&
-      !apiKeys.twitter_bearer &&
-      !apiKeys.hunterio &&
-      !apiKeys.reddit_cid &&
-      !apiKeys.reddit_cs &&
-      !apiKeys.emailrepio &&
-      !apiKeys.hibp
-    ) {
+    if (!apiKeys) {
       return (
         <>
           <NoApikeys />
@@ -83,32 +70,11 @@ export default function Email(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {apiKeys.emailrepio ? (
-                    <Emailrepio email={props.ioc} type="email" />
+                  {apiKeys ? (
+                    <Virustotal ioc={props.ioc} type="domain" apiKey={apiKeys} />
                   ) : (
                     <></>
                   )}
-                  {apiKeys.hunterio ? (
-                    <Hunterio email={props.ioc} type="email" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.github ? (
-                    <Github ioc={props.ioc} type="email" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.hibp ? (
-                    <Haveibeenpwnd email={props.ioc} type="email" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.reddit_cid && apiKeys.reddit_cs ? (
-                    <Reddit ioc={props.ioc} />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.twitter_bearer ? <Twitter ioc={props.ioc} /> : <></>}
                 </TableBody>
               </Table>
             </TableContainer>
