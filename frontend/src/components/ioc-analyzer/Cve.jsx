@@ -13,18 +13,23 @@ import {
 } from "@mui/material";
 import useTheme from "@mui/material/styles/useTheme";
 
-import Github from "./services/multi/Github";
-import NistNVD from "./services/cve/nist/NistNvd";
-
-import { apiKeysState } from "../../App";
 import NoApikeys from "./NoApikeys";
+import keys from "../../config/keys";
+import Virustotal from "./services/multi/Virustotal";
+
 
 export default function Cve(props) {
   const theme = useTheme();
-  const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL
+
+  const apiKeys = process.env.NODE_ENV === "development"
+  ? keys.REACT_APP_API_KEY_VIRUS_TOTAL 
+  : process.env.REACT_APP_API_KEY_VIRUS_TOTAL;
+
 
   function showResult() {
-    if (!apiKeys.nist_nvd && !apiKeys.github) {
+    if (!apiKeys) {
       return (
         <>
           <NoApikeys />
@@ -71,13 +76,8 @@ export default function Cve(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {apiKeys.nist_nvd ? (
-                    <NistNVD cve={props.ioc} type="cve" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.github ? (
-                    <Github ioc={props.ioc} type="cve" />
+                {apiKeys ? (
+                    <Virustotal ioc={props.ioc} type="domain" apiKey={apiKeys}/>
                   ) : (
                     <></>
                   )}

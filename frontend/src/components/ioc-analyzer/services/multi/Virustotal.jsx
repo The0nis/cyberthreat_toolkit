@@ -1,5 +1,4 @@
 import React from "react";
-import api from "../../../../api";
 import { useEffect, useState, useRef } from "react";
 
 import Box from "@mui/material/Box";
@@ -19,24 +18,49 @@ import CrowdsourcedIDSRules from "./Virustotal/CrowdsourcedIDSRules";
 import LastAnalysisResults from "./Virustotal/LastAnalysisResults";
 import Whois from "./Virustotal/Whois";
 import ThreatClassification from "./Virustotal/ThreatClassification";
+import axios from "axios";
 
-export default function Virustotal(props) {
-  const propsRef = useRef(props);
+export default function Virustotal({ ioc, type, apiKey }) {
+  const propsRef = useRef({ ioc, type, apiKey });
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [malCount, setMalCount] = useState(null);
   const [totalEngines, setTotalEngines] = useState(null);
 
+  console.log("APIKEYS--",apiKey)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url =
-          "/api/" +
-          propsRef.current.type +
-          "/virustotal?ioc=" +
-          encodeURIComponent(propsRef.current.ioc);
-        const response = await api.get(url);
+        let url = "";
+        switch (propsRef.current.type) {
+          case "ip":
+            url = `https://www.virustotal.com/api/v3/ip_addresses/${encodeURIComponent(
+              propsRef.current.ioc
+            )}`;
+            break;
+          case "hash":
+            url = `https://www.virustotal.com/api/v3/files/{encodeURIComponent(
+              propsRef.current.ioc
+            )}/behaviours`;
+            break;
+          case "domain":
+            url = `https://www.virustotal.com/api/v3/domains/${encodeURIComponent(
+              propsRef.current.ioc
+            )}`;
+            break;
+          default:
+            // Handle other types if needed
+            break;
+        }
+
+        const response = await axios.get(url, {
+          headers: {
+            "x-apikey": propsRef.current.apiKey,
+            // Include other headers if needed
+          },
+        });
+
         setResult(response.data);
         setMalCount(
           response.data.data.attributes.last_analysis_stats.malicious

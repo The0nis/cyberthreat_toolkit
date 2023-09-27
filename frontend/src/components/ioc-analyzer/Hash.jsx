@@ -1,7 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import Alienvault from "./services/multi/Alienvault";
 import Grow from "@mui/material/Grow";
 import {
   TableContainer,
@@ -14,28 +13,23 @@ import {
 } from "@mui/material";
 import useTheme from "@mui/material/styles/useTheme";
 
-import Github from "./services/multi/Github";
-import Reddit from "./services/Reddit";
-import Twitter from "./services/Twitter";
-import Virustotal from "./services/multi/Virustotal";
-import Pulsedive from "./services/multi/Pulsedive";
-import Threatfox from "./services/ipv4/Threatfox";
-import { apiKeysState } from "../../App";
+
 import NoApikeys from "./NoApikeys";
+import keys from "../../config/keys";
+import Virustotal from "./services/multi/Virustotal";
 
 export default function Hash(props) {
-  const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL;
+
+  const apiKeys = process.env.NODE_ENV === "development"
+  ? keys.REACT_APP_API_KEY_VIRUS_TOTAL 
+  : process.env.REACT_APP_API_KEY_VIRUS_TOTAL;
+
   const theme = useTheme();
 
   function showResult() {
-    if (
-      !apiKeys.alienvault &&
-      !apiKeys.github &&
-      !apiKeys.virustotal &&
-      !apiKeys.reddit_cid &&
-      !apiKeys.reddit_cs &&
-      !apiKeys.twitter_bearer
-    ) {
+    if (!apiKeys) {
       return (
         <>
           <NoApikeys />
@@ -82,37 +76,11 @@ export default function Hash(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {apiKeys.alienvault ? (
-                    <Alienvault ioc={props.ioc} type="hash" />
+                  {apiKeys ? (
+                    <Virustotal ioc={props.ioc} type="hash" apiKey={apiKeys}/>
                   ) : (
                     <></>
                   )}
-                  {apiKeys.pulsedive ? (
-                    <Pulsedive ioc={props.ioc} type="hash" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.threatfox ? (
-                    <Threatfox ioc={props.ioc} type="hash" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.virustotal ? (
-                    <Virustotal ioc={props.ioc} type="hash" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.github ? (
-                    <Github ioc={props.ioc} type="hash" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.reddit_cid && apiKeys.reddit_cs ? (
-                    <Reddit ioc={props.ioc} />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.twitter_bearer ? <Twitter ioc={props.ioc} /> : <></>}
                 </TableBody>
               </Table>
             </TableContainer>

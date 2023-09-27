@@ -13,23 +13,25 @@ import {
 } from "@mui/material";
 import useTheme from "@mui/material/styles/useTheme";
 
-import Github from "./services/multi/Github";
-import Reddit from "./services/Reddit";
-import Twitter from "./services/Twitter";
-import { apiKeysState } from "../../App";
+
 import NoApikeys from "./NoApikeys";
+import keys from "../../config/keys";
+import Virustotal from "./services/multi/Virustotal";
+
 
 export default function Ipv6(props) {
-  const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = useRecoilValue(apiKeysState);
+  
+  const apiKeys = process.env.NODE_ENV === "development"
+  ? keys.REACT_APP_API_KEY_VIRUS_TOTAL 
+  : process.env.REACT_APP_API_KEY_VIRUS_TOTAL;
+
   const theme = useTheme();
 
   function showResult() {
     if (
-      !apiKeys.github &&
-      !apiKeys.reddit_cid &&
-      !apiKeys.reddit_cs &&
-      !apiKeys.twitter_apikey &&
-      !apiKeys.twitter_apisecret
+      !apiKeys
+    
     ) {
       return (
         <>
@@ -77,21 +79,7 @@ export default function Ipv6(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {apiKeys.github ? (
-                    <Github ioc={props.ioc} type="ip" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.reddit_cid && apiKeys.reddit_cs ? (
-                    <Reddit ioc={props.ioc} />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.twitter_apikey && apiKeys.twitter_apisecret ? (
-                    <Twitter ioc={props.ioc} />
-                  ) : (
-                    <></>
-                  )}
+                {apiKeys ? <Virustotal ioc={props.ioc} type="ip" apiKey={apiKeys}/> : <></>}
                 </TableBody>
               </Table>
             </TableContainer>
