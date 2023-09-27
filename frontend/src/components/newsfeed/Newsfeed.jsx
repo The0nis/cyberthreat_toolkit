@@ -105,8 +105,12 @@ export default function Newsfeed() {
       setNewsfeed([]);
       setPage(1);
 
+      const apiKey = process.env.NODE_ENV === "development"
+          ? keys.REACT_APP_API_KEY 
+          : process.env.REACT_APP_API_KEY;
+
       const result = await axios.get(
-        `https://newsapi.org/v2/everything?q=tesla&from=2023-08-19&sortBy=publishedAt&apiKey=${keys.REACT_APP_API_KEY}`
+        // `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${apiKey}`
       );
       // Handle the response data
       // console.log(result.data);
