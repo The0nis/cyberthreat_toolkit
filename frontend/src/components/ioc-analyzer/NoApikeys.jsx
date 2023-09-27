@@ -28,7 +28,7 @@ export default function NoApikeys() {
                     <Divider orientation="vertical" flexItem></Divider>
                     <Grid xs item={true} sx={{p: 2}}>
                         <h2>No API keys available for this action</h2>
-                        <p>You need to add API keys in the settings tab, to use this function.</p>
+                        <p>To use this function. Please Contact the admin</p>
                     </Grid>
                 </Grid>
             </Card>
