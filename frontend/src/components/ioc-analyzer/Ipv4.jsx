@@ -24,9 +24,8 @@ export default function Ipv4(props) {
   const theme = useTheme();
   
 
-  const apiKeys = process.env.NODE_ENV === "development"
-  ? keys.REACT_APP_API_KEY_VIRUS_TOTAL 
-  : process.env.REACT_APP_API_KEY_VIRUS_TOTAL;
+  const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL;
+  
 
   // console.log("keys",keys)
 

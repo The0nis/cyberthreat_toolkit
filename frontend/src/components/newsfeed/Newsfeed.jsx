@@ -105,9 +105,8 @@ export default function Newsfeed() {
       setNewsfeed([]);
       setPage(1);
 
-      const apiKey = process.env.NODE_ENV === "development"
-          ? keys.REACT_APP_API_KEY 
-          : process.env.REACT_APP_API_KEY;
+      const apiKey = keys.REACT_APP_API_KEY;
+          
 
           
       const result = await axios.get(
