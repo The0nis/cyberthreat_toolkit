@@ -28,6 +28,7 @@ export default function Virustotal({ ioc, type, apiKey }) {
   const [malCount, setMalCount] = useState(null);
   const [totalEngines, setTotalEngines] = useState(null);
 
+  console.log("APIKEYS--",apiKey)
   useEffect(() => {
     const fetchData = async () => {
       try {

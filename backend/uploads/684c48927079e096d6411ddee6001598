@@ -1,0 +1,156 @@
+Delivered-To: onisamuelmichael@gmail.com
+Received: by 2002:a17:522:474c:b0:533:8bd3:4ef4 with SMTP id u12csp2015471pvj;
+        Tue, 26 Sep 2023 11:21:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFInewbJDBCMhO084ugMI6SsuwgOIU+XGlR9yHhGEbgGxWJtsw4D4LOhAAJab7DD/5nzi2/
+X-Received: by 2002:a25:ae65:0:b0:d7b:57dc:2b9d with SMTP id g37-20020a25ae65000000b00d7b57dc2b9dmr10331697ybe.14.1695752501245;
+        Tue, 26 Sep 2023 11:21:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1695752501; cv=none;
+        d=google.com; s=arc-20160816;
+        b=LQVN/zQgAN0iXBDyKwGjlPLpYGrGQrRQ1vYh1AXty5H0vu/y0+bK0Rdq1EVqQXZB4l
+         jOoBYpj4ZmK2xq6zhCL0afkDiwwAchEtBoPEhzGJCFBO6XbJ1wfV1mXP6nA9+Or5lq5Q
+         vsN2PD4c45skkaHLlPrYfQmUH/LEiuZRdelSYLLM9tcCI0zJFpx4wFSLAeiVQflgtLQJ
+         12npx/UQPOLi92zwBMSRQykve1S6HIFI07HwLgRbO1ftEX4IE/KJSQE986b0yYCT1aI8
+         BgY59vKGnZzZTZyUcgpGJ0FFKh8Yj5IhPmGhb/dBFZhoN1nyeiKDTq11cubphCsp8ic9
+         0uYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=mime-version:subject:references:in-reply-to:message-id:to:from:date;
+        bh=tdPLujQT8ba/zH0Hgy4rWXiXWSo68jRj/GztpVTwaKM=;
+        fh=mTm2WFRrBOo1rE+LNgfXSWdriRdmDTrZ1FiizL2cYkE=;
+        b=kdwtWAEI6c3n0V5cgduYz1/8zNW15rVhtjFZhbvIO1pgcucl0t5BTxqSeVJOkOI+1J
+         TN6W25WtGUeZDNVTsCjM36Hii3+bJRt00pb3/z4XxwX7L7uwj3aHusKBrUzL9fhyadCb
+         OBIGLBB489mA5FwRpuN0+3q84DbOUhNFb/tf26aiQD/Bki5xl7f602sAA8OEHHL4aiB7
+         BjtQ3wwdChu2kI4/A42rmrjBs+MzNLvt5uH0k4VA3ZUmp+nrMhGXQNmaL2Oj8BP3CZwu
+         J4I5O6U0VzkKYKUXHo5aHsH2DkuClXR5eZmcY9+yS5Hco9a9gTQgO7j1+cH05rUAmKX1
+         IIoQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: domain of coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com designates 13.110.74.182 as permitted sender) smtp.mailfrom="coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com";
+       dmarc=fail (p=QUARANTINE sp=REJECT dis=QUARANTINE) header.from=northeastern.edu
+Return-Path: <coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com>
+Received: from smtp07-ia4-sp4.mta.salesforce.com (smtp07-ia4-sp4.mta.salesforce.com. [13.110.74.182])
+        by mx.google.com with ESMTPS id r14-20020a0ce28e000000b00655702f9b6asi4821591qvl.103.2023.09.26.11.21.41
+        for <onisamuelmichael@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Sep 2023 11:21:41 -0700 (PDT)
+Received-SPF: pass (google.com: domain of coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com designates 13.110.74.182 as permitted sender) client-ip=13.110.74.182;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: domain of coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com designates 13.110.74.182 as permitted sender) smtp.mailfrom="coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com";
+       dmarc=fail (p=QUARANTINE sp=REJECT dis=QUARANTINE) header.from=northeastern.edu
+Return-Path: <coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com>
+Authentication-Results:  mx1-ia4-sp4.mta.salesforce.com x-tls.subject="/C=US/ST=California/L=San Francisco/O=salesforce.com, inc./OU=0:app;1:ia4;2:ia4-sp4;3:na170;4:prod/CN=na170-app2-44-ia4.ops.sfdc.net"; auth=pass (cipher=ECDHE-RSA-AES256-GCM-SHA384)
+Received: from [10.181.192.70] ([10.181.192.70:48093] helo=na170-app2-44-ia4.ops.sfdc.net)
+	by mx1-ia4-sp4.mta.salesforce.com (envelope-from <coe-gradadmissions=northeastern.edu__7wq81rgfs05i6o5u@srwqpirnehc.3i-cupdeak.na170.bnc.salesforce.com>)
+	(ecelerity 4.4.0.19839 r(msys-ecelerity:tags/4.4.0.0^0)) with ESMTPS (cipher=ECDHE-RSA-AES256-GCM-SHA384
+	subject="/C=US/ST=California/L=San Francisco/O=salesforce.com, inc./OU=0:app;1:ia4;2:ia4-sp4;3:na170;4:prod/CN=na170-app2-44-ia4.ops.sfdc.net") 
+	id 69/30-06257-53123156; Tue, 26 Sep 2023 18:21:41 +0000
+Date: Tue, 26 Sep 2023 18:21:41 +0000 (GMT)
+From: Admissions Support Inbox <coe-gradadmissions@northeastern.edu>
+To: "onisamuelmichael@gmail.com" <onisamuelmichael@gmail.com>
+Message-ID: <eWI1N000000000000000000000000000000000000000000000S1LV04007XKca-MPQtyvGewaNBSomA@sfdc.net>
+In-Reply-To: <MN2PR06MB5711862A1D611A13CA508CD08EC3A@MN2PR06MB5711.namprd06.prod.outlook.com>
+References: <CAHRS5hg-8tA+NaxkgDU-6k-peF2xTipy+44YL1zQ8fDvKu8SZw@mail.gmail.com>
+ <MN2PR06MB5711862A1D611A13CA508CD08EC3A@MN2PR06MB5711.namprd06.prod.outlook.com>
+Subject: Request for Application Fee Waiver - Master of Science in Software
+ Engineering Systems (Spring 2024)    [ ref:_00D3iCuPd._5006e23g9Pz:ref ]
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_4107_1468134488.1695752501041"
+X-SFDC-LK: 00D3i000000CuPd
+X-SFDC-User: 0053i000002xP4F
+X-Sender: postmaster@salesforce.com
+X-mail_abuse_inquiries: http://www.salesforce.com/company/abuse.jsp
+X-SFDC-TLS-NoRelay: 1
+X-SFDC-Binding: 1WrIRBV94myi25uB
+X-SFDC-EmailCategory: quickActionEmail
+X-SFDC-EntityId: 5006e000023g9Pz
+X-SFDC-Interface: internal
+
+------=_Part_4107_1468134488.1695752501041
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hello,
+
+Thank you for reaching out and for your interest in the Graduate School of Engineering here at Northeastern! We are not running a fee waiver at this time, opportunities may become available later in the application cycle. In the meantime, please take a look at our events page linked below. There may be fee waivers available by some of our recruiters exclusive to these events.
+
+https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-admissions/graduate-admission-events/
+
+
+Thank you,
+Jason Gouin
+From: Oni Michael <onisamuelmichael@gmail.com>
+Sent: Tuesday, September 26, 2023 1:52 PM
+To: Khoury Graduate Admissions <khoury-gradschool@northeastern.edu>
+Subject: Request for Application Fee Waiver - Master of Science in Software Engineering Systems (Spring 2024)
+Dear Admissions Committee,
+
+I hope this letter finds you well. I am writing to respectfully request a waiver of the application fee for my prospective enrollment in the Master of Science in Software Engineering Systems program at Northeastern University for the Spring 2024 term.
+
+I wish to express my sincere interest in joining the esteemed academic community at Northeastern University. However, I find myself facing significant financial hardship, particularly due to the currency exchange rate between the Nigerian Naira and the U.S. Dollar, which has placed added strain on my financial resources.
+
+As an international applicant from Nigeria, the cost of applying to universities in the United States has become a considerable financial burden for me and my family. The application fee, in conjunction with other related expenses, poses a challenge to my ability to apply to multiple institutions.
+
+I am deeply committed to furthering my education and firmly believe that the Master of Science in Software Engineering Systems program at Northeastern University aligns perfectly with my academic and career goals. I have a strong academic background, as evidenced by my Second Class Upper Division classification in my BSc in Computer Science
+
+I kindly request your consideration of my financial circumstances and my sincere desire to join the Northeastern University community. A waiver of the application fee would significantly alleviate the financial burden and enable me to submit a comprehensive application.
+
+I have not benefited from any college programs that provide financial assistance, and my current financial situation compels me to seek this fee waiver.
+
+Thank you for your time and consideration of my request. I look forward to the possibility of becoming a part of the Northeastern University community and contributing to its academic excellence.
+
+Sincerely,
+
+Oni Michael Samuel
+ref:_00D3iCuPd._5006e23g9Pz:ref
+------=_Part_4107_1468134488.1695752501041
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+<head>
+	<title></title>
+</head>
+<body dir="ltr"><span style="font-size:12pt"><span style="background:white"><span style="font-family:&quot;Times New Roman&quot;,serif"><span style="color:black">Hello,<br />
+<br />
+Thank you for reaching out and for your interest in the Graduate School of Engineering here at Northeastern! We are not running a fee waiver at this time, opportunities may become available later in the application cycle. In the meantime, please take a look at our events page linked below. There may be fee waivers available by some of our recruiters exclusive to these events.</span></span></span></span><br />
+<br />
+<span style="font-size:12pt"><span style="background:white"><span style="font-family:&quot;Times New Roman&quot;,serif"><span style="color:black"><a href="https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-admissions/graduate-admission-events/" target="_blank" title="https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-admissions/graduate-admission-events/"><span style="color:black"><span style="text-decoration:none"><span style="text-underline:none">https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-admissions/graduate-admission-events/</span></span></span></a></span></span></span></span><br />
+<br />
+<br />
+Thank you,<br />
+Jason Gouin
+<div id="appendonsend">&nbsp;</div>
+
+<hr style="display:inline-block;width:98%" tabindex="-1" />
+<div dir="ltr" id="divRplyFwdMsg"><font color="#000000" face="Calibri, sans-serif" style="font-size:11pt"><b>From:</b> Oni Michael &lt;onisamuelmichael@gmail.com&gt;<br clear="none" />
+<b>Sent:</b> Tuesday, September 26, 2023 1:52 PM<br clear="none" />
+<b>To:</b> Khoury Graduate Admissions &lt;khoury-gradschool@northeastern.edu&gt;<br clear="none" />
+<b>Subject:</b> Request for Application Fee Waiver - Master of Science in Software Engineering Systems (Spring 2024)</font>
+
+<div>&nbsp;</div>
+</div>
+
+<div>
+<div dir="ltr">Dear Admissions Committee,<br clear="none" />
+<br clear="none" />
+I hope this letter finds you well. I am writing to respectfully request a waiver of the application fee for my prospective enrollment in the Master of Science in Software Engineering Systems program at Northeastern University for the Spring 2024 term.<br clear="none" />
+<br clear="none" />
+I wish to express my sincere interest in joining the esteemed academic community at Northeastern University. However, I find myself facing significant financial hardship, particularly due to the currency exchange rate between the Nigerian Naira and the U.S. Dollar, which has placed added strain on my financial resources.<br clear="none" />
+<br clear="none" />
+As an international applicant from Nigeria, the cost of applying to universities in the United States has become a considerable financial burden for me and my family. The application fee, in conjunction with other related expenses, poses a challenge to my ability to apply to multiple institutions.<br clear="none" />
+<br clear="none" />
+I am deeply committed to furthering my education and firmly believe that the Master of Science in Software Engineering Systems program at Northeastern University aligns perfectly with my academic and career goals. I have a strong academic background, as evidenced by my Second Class Upper Division classification in my BSc in Computer Science<br clear="none" />
+<br clear="none" />
+I kindly request your consideration of my financial circumstances and my sincere desire to join the Northeastern University community. A waiver of the application fee would significantly alleviate the financial burden and enable me to submit a comprehensive application.<br clear="none" />
+<br clear="none" />
+I have not benefited from any college programs that provide financial assistance, and my current financial situation compels me to seek this fee waiver.<br clear="none" />
+<br clear="none" />
+Thank you for your time and consideration of my request. I look forward to the possibility of becoming a part of the Northeastern University community and contributing to its academic excellence.<br clear="none" />
+<br clear="none" />
+Sincerely,<br clear="none" />
+<br clear="none" />
+Oni Michael Samuel<br clear="none" />
+&nbsp;</div>
+</div>
+<img src="https://husky.my.salesforce.com/servlet/servlet.ImageServer?oid=00D3i000000CuPd&esid=0186e00000wMTKF&from=ext"><br><br>ref:_00D3iCuPd._5006e23g9Pz:ref</body>
+</html>
+------=_Part_4107_1468134488.1695752501041--

@@ -22,7 +22,11 @@ import keys from "../../config/keys.js";
 export default function Ipv4(props) {
   // const apiKeys = useRecoilValue(apiKeysState);
   const theme = useTheme();
-  const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL;
+  
+
+  const apiKeys = process.env.NODE_ENV === "development"
+  ? keys.REACT_APP_API_KEY_VIRUS_TOTAL 
+  : process.env.REACT_APP_API_KEY_VIRUS_TOTAL;
 
   // console.log("keys",keys)
 
