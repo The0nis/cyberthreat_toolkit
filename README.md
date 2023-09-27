@@ -13,15 +13,11 @@ Cyber Toolkit is a full-stack web application designed to assist security analys
   * [Newsfeed](#features)
   * [Email Analyzer](#features)
   * [IOC Analyzer](#ioc-analyzer)
-  * [IOC Extractor](#ioc-extractor)
-  * [Domain Monitoring](#domain-monitoring)
-  * [AI Assistant](#ai-assistant)
   * [CVSS Calculator](#cvss-calculator)
   * [GUI to create Sigma rules](#rules)
   * [Customizability](#customizable)
 * [Planned features](#planned-features-for-later-versions)
-* [Deploy with Docker](#deploy-with-docker)
-* [Deploy from source](#deploy-from-source)
+
 
 ## Integrated services
 | IPs            | Domains       | URLs                 | Emails           | Hashes     | CVEs     |
@@ -52,10 +48,6 @@ The IOC Analyzer module helps you analyze different types of indicators of compr
 ### Email Analyzer
 The Email Analyzer module allows you to analyze .eml files for potential threats. Simply drag and drop an .eml file into the module, and it will parse the file, perform basic security checks, extract indicators of compromise (IOCs), and analyze messages with the help of AI. Analyze the IOCs using various open-source intelligence (OSINT) services, and enhance your organization's email security.
 
-### IOC Extractor
-The IOC Extractor module allows you to extract and organize IOCs from unstructured files using regular expressions (Regex). It automatically removes duplicates, saving you the effort of sorting through the same IOCs multiple times. Simply drop your file containing the IOCs into the tool, and analyze each detected IOC with a single click.
-
-
 
 ### CVSS Calculator
 The CVSS Calculator module allows you to calculate the CVSS 3.1 score of a vulnerability and export the calculation as a markdown or JSON file.
@@ -72,7 +64,7 @@ Customize the descriptions of each module with your own markdown-formatted text.
 
 
 ## Planned features for later versions
-- Add more OSINT services
+- Add more CyberThreat services
 - Generate hashes from files to analyse them in a privacy-friendly way.
 - Export reports
 - Save history and generate statistics

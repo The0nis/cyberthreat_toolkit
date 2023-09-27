@@ -13,35 +13,18 @@ import {
 } from "@mui/material";
 import useTheme from "@mui/material/styles/useTheme";
 
-import Checkphish from "./services/multi/Checkphish";
-import Github from "./services/multi/Github";
-import Reddit from "./services/Reddit";
-import Twitter from "./services/Twitter";
-import Alienvault from "./services/multi/Alienvault";
-import Pulsedive from "./services/multi/Pulsedive";
-import Shodan from "./services/multi/Shodan";
 import Virustotal from "./services/multi/Virustotal";
-import Safebrowsing from "./services/multi/Safebrowsing";
-import { apiKeysState } from "../../App";
+
 import NoApikeys from "./NoApikeys";
+import keys from "../../config/keys";
 
 export default function Domain(props) {
   const theme = useTheme();
-  const apiKeys = useRecoilValue(apiKeysState);
+  // const apiKeys = useRecoilValue(apiKeysState);
+  const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL;
 
   function showResult() {
-    if (
-      !apiKeys.alienvault &&
-      !apiKeys.github &&
-      !apiKeys.checkphishai &&
-      !apiKeys.virustotal &&
-      !apiKeys.pulsedive &&
-      !apiKeys.safebrowsing &&
-      !apiKeys.shodan &&
-      !apiKeys.reddit_cid &&
-      !apiKeys.reddit_cs &&
-      !apiKeys.twitter_bearer
-    ) {
+    if (!apiKeys) {
       return (
         <>
           <NoApikeys />
@@ -88,47 +71,11 @@ export default function Domain(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {apiKeys.alienvault ? (
-                    <Alienvault ioc={props.ioc} type="domain" />
+                  {apiKeys ? (
+                    <Virustotal ioc={props.ioc} type="domain" apiKey={apiKeys}/>
                   ) : (
                     <></>
                   )}
-                  {apiKeys.checkphishai ? (
-                    <Checkphish ioc={props.ioc} type="domain" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.safebrowsing ? (
-                    <Safebrowsing ioc={props.ioc} type="domain" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.pulsedive ? (
-                    <Pulsedive ioc={props.ioc} type="domain" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.virustotal ? (
-                    <Virustotal ioc={props.ioc} type="domain" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.shodan ? (
-                    <Shodan ioc={props.ioc} type="domain" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.github ? (
-                    <Github ioc={props.ioc} type="hash" />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.reddit_cid && apiKeys.reddit_cs ? (
-                    <Reddit ioc={props.ioc} />
-                  ) : (
-                    <></>
-                  )}
-                  {apiKeys.twitter_bearer ? <Twitter ioc={props.ioc} /> : <></>}
                 </TableBody>
               </Table>
             </TableContainer>
