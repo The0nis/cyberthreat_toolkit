@@ -23,10 +23,7 @@ export default function Cve(props) {
   // const apiKeys = useRecoilValue(apiKeysState);
   // const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL
 
-  const apiKeys = process.env.NODE_ENV === "development"
-  ? keys.REACT_APP_API_KEY_VIRUS_TOTAL 
-  : process.env.REACT_APP_API_KEY_VIRUS_TOTAL;
-
+  const apiKeys = keys.REACT_APP_API_KEY_VIRUS_TOTAL;
 
   function showResult() {
     if (!apiKeys) {
