@@ -40,9 +40,9 @@ export default function Virustotal({ ioc, type, apiKey }) {
             )}`;
             break;
           case "hash":
-            url = `https://www.virustotal.com/api/v3/files/{encodeURIComponent(
+            url = `https://www.virustotal.com/api/v3/files/${encodeURIComponent(
               propsRef.current.ioc
-            )}/behaviours`;
+            )}`;
             break;
           case "domain":
             url = `https://www.virustotal.com/api/v3/domains/${encodeURIComponent(
