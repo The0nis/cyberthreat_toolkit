@@ -5,8 +5,15 @@ const multer = require("multer"); // Require the multer library to handle file u
 const upload = multer({ dest: "uploads/" });
 
 
-// Enable CORS for all routes
-app.use(cors());
+// Allow CORS from any origin
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
+
 const { dummyNewsfeedData } = require("./dummyData");
 
 // Simulated module settings (replace with your actual data)
@@ -102,22 +109,35 @@ app.get("/api/settings/modules/newsfeed/", (req, res) => {
     res.json(dummyNewsfeedData);
   });
 
-// Define a route to handle file uploads
-app.post("/api/mailanalyzer", upload.single("file"), (req, res) => {
-    try {
-      // Get the uploaded file details from req.file
-      const uploadedFile = req.file;
-      
-      // Here, you can process the uploaded file as needed
-      // For example, you can save it, analyze it, etc.
-  
-      // Respond with a success message or any relevant data
-      res.json({ message: "File uploaded successfully", file: uploadedFile });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "An error occurred while processing the file" });
+
+// Define a route to handle file uploads (proxy)
+app.options('/api/mailanalyzer', cors(corsOptions)); // Handle CORS preflight request
+app.post('/api/mailanalyzer', cors(corsOptions), async (req, res) => {
+  const apiUrl = 'https://eml-analyzer.herokuapp.com/api/analyze/file';
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: req.body, // Forward the request body from your frontend
+      headers: req.headers, // Forward headers, including any authentication headers
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      res.json(data);
+    } else {
+      console.error('Error in external API:', response.statusText);
+      res.status(response.status).json({ error: 'Error in external API' });
     }
-  });
+  } catch (error) {
+    console.error('An error occurred:', error);
+    res.status(500).json({ error: 'An error occurred while processing the request' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
   app.get("/api/settings/general/darkmode", (req, res) => {
     const { darkmode } = req.query;
