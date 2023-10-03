@@ -82,11 +82,20 @@ export default function FileUpload(props) {
   };
 
   function uploadFiles(file) {
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    let fd = new FormData();
-    fd.append("file", file);
+    const apiUrl = "https://eml-analyzer.herokuapp.com/api/analyze/file";
+
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    const config = {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
     api
-      .post(`/api/mailanalyzer/`, fd, config)
+      .post(apiUrl, formData, config)
       .then((response) => {
         const result = response.data;
         setFile(result);
@@ -96,7 +105,6 @@ export default function FileUpload(props) {
         console.log(error);
       });
   }
-  
 
   return (
     <div className="drop">
