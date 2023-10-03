@@ -96,6 +96,7 @@ export default function FileUpload(props) {
         console.log(error);
       });
   }
+  
 
   return (
     <div className="drop">
