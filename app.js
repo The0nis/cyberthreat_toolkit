@@ -6,7 +6,7 @@ const upload = multer({ dest: "uploads/" });
 
 // Allow CORS from any origin
 const corsOptions = {
-  origin: "*",
+  origin: "http://localhost:3000/",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -109,13 +109,13 @@ app.get("/api/newsfeed", (req, res) => {
 });
 
 // Define a route to handle file uploads (proxy)
-app.options("/api/mailanalyzer", cors(corsOptions)); // Handle CORS preflight request
-app.post("/api/mailanalyzer", cors(corsOptions), async (req, res) => {
-  const apiUrl = "https://eml-analyzer.herokuapp.com/api/analyze/file";
+app.options('/api/mailanalyzer', cors(corsOptions)); // Handle CORS preflight request
+app.post('/api/mailanalyzer', cors(corsOptions), async (req, res) => {
+  const apiUrl = 'https://eml-analyzer.herokuapp.com/api/analyze/file';
 
   try {
     const response = await fetch(apiUrl, {
-      method: "POST",
+      method: 'POST',
       body: req.body, // Forward the request body from your frontend
       headers: req.headers, // Forward headers, including any authentication headers
     });
@@ -124,16 +124,15 @@ app.post("/api/mailanalyzer", cors(corsOptions), async (req, res) => {
       const data = await response.json();
       res.json(data);
     } else {
-      console.error("Error in external API:", response.statusText);
-      res.status(response.status).json({ error: "Error in external API" });
+      console.error('Error in external API:', response.statusText);
+      res.status(response.status).json({ error: 'Error in external API' });
     }
   } catch (error) {
-    console.error("An error occurred:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while processing the request" });
+    console.error('An error occurred:', error);
+    res.status(500).json({ error: 'An error occurred while processing the request' });
   }
 });
+
 
 app.get("/api/settings/general/darkmode", (req, res) => {
   const { darkmode } = req.query;
