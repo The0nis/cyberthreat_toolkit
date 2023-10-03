@@ -133,6 +133,36 @@ app.post('/api/mailanalyzer', cors(corsOptions), async (req, res) => {
   }
 });
 
+app.get('/virustotal/:sha256', async (req, res) => {
+  const sha256 = req.params.sha256;
+  const apiKey = '1eb413edca7d83d8b7789cebb7bc6cb7276abf44fe0b592cf18b04aeeaea48bc';
+
+  const apiUrl = `https://www.virustotal.com/api/v3/files/sha256/${sha256}`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'x-apikey': apiKey,
+      },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      res.json(result);
+    } else {
+      res.status(response.status).json({ error: 'Error fetching data from VirusTotal' });
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 
 app.get("/api/settings/general/darkmode", (req, res) => {
   const { darkmode } = req.query;
