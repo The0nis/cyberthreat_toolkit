@@ -110,7 +110,7 @@ export default function Newsfeed() {
 
           
       const result = await axios.get(
-        // `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${apiKey}`
+        `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${apiKey}`
       );
       // Handle the response data
       // console.log(result.data);
