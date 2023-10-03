@@ -159,11 +159,6 @@ app.get('/virustotal/:sha256', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-
 app.get("/api/settings/general/darkmode", (req, res) => {
   const { darkmode } = req.query;
 
