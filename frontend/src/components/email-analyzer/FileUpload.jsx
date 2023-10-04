@@ -10,6 +10,7 @@ import Result from "./Result";
 
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import keys from "../../config/keys";
+import axios from "axios";
 
 export default function FileUpload(props) {
   const theme = useTheme();
@@ -83,16 +84,17 @@ export default function FileUpload(props) {
   };
 
   // function uploadFiles(file) {
-  //   const apiUrl = "https://eml-analyzer.herokuapp.com/api/analyze/file";
+  //   const apiUrl = "/api/mailanalyzer";
 
   //   const formData = new FormData();
   //   formData.append("file", file, file.name);
 
   //   const config = {
   //     headers: {
-  //       accept: "application/json",
+  //       "accept": "application/json",
   //       "Content-Type": "multipart/form-data",
   //     },
+  //     mode: "no-cors"
   //   };
 
   //   api
@@ -106,73 +108,45 @@ export default function FileUpload(props) {
   //       console.log(error);
   //     });
   // }
+  function uploadFiles(file) {
+    const apiUrl = "https://www.virustotal.com/api/v3/files";
+    const apiKey = keys.REACT_APP_API_KEY_VIRUS_TOTAL; // Replace with your actual API key
 
-  async function uploadFiles(file) {
-    if (file) {
-      try {
-        // Calculate the SHA hash of the file
-        const shaHash = await calculateSHA(file);
-  
-        // Check if SHA hash was calculated successfully
-        if (!shaHash) {
-          console.error('Error calculating SHA hash');
-          return;
-        }
-  
-        // Send the SHA hash to the VirusTotal endpoint
-        const apiUrl = 'https://www.virustotal.com/api/v3/files/sha256/' + shaHash;
-  
-        const response = await fetch(apiUrl, {
-          method: 'GET',
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    const uploadConfig = {
+      headers: {
+        "x-apikey": apiKey,
+      },
+    };
+
+    // Step 1: Upload the file
+    axios
+      .post(apiUrl, formData, uploadConfig)
+      .then((response) => {
+        const analysisId = response.data.data.id;
+        // Step 2: Use the extracted analysisId to fetch analysis data
+        const analysisUrl = `https://www.virustotal.com/api/v3/analyses/${analysisId}`;
+        const analysisConfig = {
           headers: {
-            'x-apikey': keys.REACT_APP_API_KEY_VIRUS_TOTAL, // Replace with your VirusTotal API key
+            "x-apikey": apiKey,
           },
-        });
-  
-        if (response.ok) {
-          const result = await response.json();
-          // Handle the result or pass it to a callback function
-          setFile(result);
-          handleShowResult();
-        } else {
-          console.error('Error fetching data from VirusTotal:', response.statusText);
-          // Handle the error as needed
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
-        // Handle the error as needed
-      }
-    } else {
-      alert('Please select a file to upload.');
-    }
+        };
+
+        return axios.get(analysisUrl, analysisConfig);
+      })
+      .then((analysisResponse) => {
+        const result = analysisResponse.data;
+        // Process the analysis result as needed
+        setFile(result);
+        handleShowResult();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
-  
-  async function calculateSHA(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-  
-      reader.onload = function (event) {
-        const arrayBuffer = event.target.result;
-        const crypto = window.crypto || window.msCrypto; // Browser compatibility
-  
-        if (!crypto) {
-          reject('Crypto API not available');
-          return;
-        }
-  
-        crypto.subtle.digest('SHA-256', arrayBuffer).then((hashBuffer) => {
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          const shaHash = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-          resolve(shaHash);
-        }).catch((error) => {
-          reject(error);
-        });
-      };
-  
-      reader.readAsArrayBuffer(file);
-    });
-  }
-  
+
   return (
     <div className="drop">
       <br />

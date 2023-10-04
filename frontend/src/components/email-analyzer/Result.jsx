@@ -1,14 +1,17 @@
 import React from "react";
 import { useState } from "react";
 import dompurify from "dompurify";
+import moment from "moment";
 
 import Email from "../ioc-analyzer/Email.jsx";
 import Hash from "../ioc-analyzer/Hash.jsx";
 import OpenAi from "./ShowOpenAiAnswer.jsx";
 import Url from "../ioc-analyzer/Url.jsx";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 
 import Alert from "@mui/material/Alert";
-import { AlertTitle } from "@mui/material";
+
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -70,10 +73,13 @@ export default function Result(props) {
 
   const result = props.result;
 
+  console.log("result----", result);
+  const ioc = result?.meta?.file_info?.sha1;
+  const stats = result?.data?.attributes?.stats;
+
   const [showHashAnalysisAttachements, setShowHashAnalysisAttachements] =
     React.useState(false);
   function hashAnalysis(props) {
-    const ioc = props;
     return (
       <>
         <br />
@@ -83,6 +89,7 @@ export default function Result(props) {
       </>
     );
   }
+  console.log("stats", stats);
 
   const [showHashAnalysisEml, setShowHashAnalysisEml] = React.useState(false);
   function hashAnalysisEml(props) {
@@ -134,8 +141,8 @@ export default function Result(props) {
   };
 
   function showAttachements() {
-    if (result["attachments"].length > 0) {
-      return result["attachments"].map((row, index) => (
+    if (result?.links?.length > 0) {
+      return result?.links?.map((row, index) => (
         <React.Fragment key={index}>
           <TableContainer sx={tableContainerStyle}>
             <Table aria-label="simple table" sx={tableCellStyle}>
@@ -152,8 +159,8 @@ export default function Result(props) {
                       component="div"
                     >
                       <b>
-                        {row.filename != null
-                          ? row.filename
+                        {row?.filename != null
+                          ? row?.filename
                           : "Unknown filename"}
                       </b>
                     </Typography>
@@ -168,7 +175,7 @@ export default function Result(props) {
                   </TableCell>
                   <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                     {" "}
-                    {row.md5}{" "}
+                    {row?.md5}{" "}
                   </TableCell>
                   <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                     <Button
@@ -193,7 +200,7 @@ export default function Result(props) {
                   </TableCell>
                   <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                     {" "}
-                    {row.sha1}{" "}
+                    {row?.sha1}{" "}
                   </TableCell>
                   <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                     <Button
@@ -218,7 +225,7 @@ export default function Result(props) {
                   </TableCell>
                   <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                     {" "}
-                    {row.sha256}{" "}
+                    {row?.sha256}{" "}
                   </TableCell>
                   <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                     <Button
@@ -239,45 +246,70 @@ export default function Result(props) {
               </TableBody>
             </Table>
           </TableContainer>
-          {showHashAnalysisAttachements ? hashAnalysis(row.md5) : <></>}
+          {showHashAnalysisAttachements ? hashAnalysis(row?.md5) : <></>}
         </React.Fragment>
       ));
     } else {
       return <p>No attachments found</p>;
     }
   }
+  console.log("stats", result?.data?.attributes?.stats);
+  const showWarnings = () => {
+    const stats = result?.data?.attributes?.stats;
 
-  function showWarnings() {
-    if (result["warnings"].length > 0) {
+    // console.log("stats", stats);
+
+    if (stats && Object.keys(stats).length > 0) {
       return (
         <>
-          {result["warnings"].map((row, index) => (
-            <Alert
-              key={"ema_warnings_alert_" + index}
-              severity={
-                row["warning_tlp"] === "red"
-                  ? "error"
-                  : row["warning_tlp"] === "orange"
-                  ? "warning"
-                  : row["warning_tlp"] === "green"
-                  ? "success"
-                  : "info"
-              }
-              variant="filled"
-              sx={{ mt: 1, borderRadius: 5 }}
-            >
-              <AlertTitle>
-                <b>{row["warning_title"]}</b>
-              </AlertTitle>
-              {row["warning_message"]}
-            </Alert>
-          ))}
+          {Object.keys(stats).map((key, index) => {
+            const {
+              failure,
+              harmless,
+              malicious,
+              suspicious,
+              timeout,
+              undetected,
+            } = stats[key];
+
+            // Determine the color based on the item type
+            const color =
+              malicious === "red"
+                ? "error"
+                : suspicious === "orange"
+                ? "warning"
+                : harmless === "green"
+                ? "success"
+                : timeout === "yellow"
+                ? "info"
+                : "info"; // Default to info if none of the above conditions match
+
+            return (
+              <Alert
+                key={"ema_warnings_alert_" + index}
+                severity={color}
+                variant="filled"
+                sx={{ mt: 1, borderRadius: 5 }}
+              >
+                {/* Display the item name and value */}
+                {Object.entries(stats[key]).map(([itemName, itemValue]) => (
+                  <Alert key={itemName}>
+                    <b>{"itemName"}:</b> {"itemValue"}
+                  </Alert>
+                ))}
+              </Alert>
+            );
+          })}
         </>
       );
     } else {
-      return <></>;
+      return (
+        <h2>
+          <VerifiedUserIcon /> Basic security checks
+        </h2>
+      );
     }
-  }
+  };
 
   function showHops() {
     if (result["hops"] != null) {
@@ -347,7 +379,7 @@ export default function Result(props) {
   }
 
   function showHeaderFields() {
-    if (result["headers"] != null) {
+    if (result?.results != null) {
       return (
         <>
           <TableContainer component={Paper} sx={tableContainerStyle}>
@@ -364,7 +396,7 @@ export default function Result(props) {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {Object.entries(result["headers"]).map((key, index) => (
+              {Object.entries(result?.results).map((key, index) => (
                 <React.Fragment key={index}>
                   <TableBody>
                     <TableRow
@@ -386,13 +418,13 @@ export default function Result(props) {
   }
 
   function showUrls() {
-    if (result["urls"].length > 0) {
+    if (result?.links?.length > 0) {
       return (
         <React.Fragment key="urls_fragment">
           <TableContainer component={Paper} sx={tableContainerStyle}>
             <Table aria-label="simple table" sx={tableCellStyle}>
               <TableBody>
-                {result["urls"].map((row, index) => (
+                {result?.links?.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                       {row}
@@ -441,7 +473,10 @@ export default function Result(props) {
                     <PersonIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["from"]}
+                    // primary={result?.attributes?.date}
+                    primary={moment
+                      .unix(result?.data?.attributes?.date)
+                      .format("DD/MM/YYYY")}
                     secondary="From"
                   />
                 </ListItem>
@@ -452,8 +487,8 @@ export default function Result(props) {
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      result["basic_info"]["return-path"]
-                        ? result["basic_info"]["return-path"]
+                      result?.data?.meta?.file_info?.size
+                        ? result?.data?.meta?.file_info?.size
                         : "N/A"
                     }
                     secondary="Reply To"
@@ -465,7 +500,9 @@ export default function Result(props) {
                     <ThreePIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["to"]}
+                    primary={moment
+                      .unix(result?.data?.attributes?.date)
+                      .format("DD/MM/YYYY")}
                     secondary="To"
                   />
                 </ListItem>
@@ -475,7 +512,9 @@ export default function Result(props) {
                     <CalendarMonthIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["date"]}
+                    primary={moment
+                      .unix(result?.data?.attributes?.date)
+                      .format("DD/MM/YYYY")}
                     secondary="Date"
                   />
                 </ListItem>
@@ -485,7 +524,7 @@ export default function Result(props) {
                     <SubjectIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["subject"]}
+                    primary={result?.data?.type}
                     secondary="Subject"
                   />
                 </ListItem>
@@ -502,7 +541,7 @@ export default function Result(props) {
                     <DescriptionIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["eml_hashes"]["md5"]}
+                    primary={result?.meta?.file_info?.md5}
                     secondary="MD5"
                   />
                 </ListItem>
@@ -512,7 +551,7 @@ export default function Result(props) {
                     <DescriptionIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["eml_hashes"]["sha1"]}
+                    primary={result?.meta?.file_info?.sha1}
                     secondary="SHA1"
                   />
                 </ListItem>
@@ -522,7 +561,7 @@ export default function Result(props) {
                     <DescriptionIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["eml_hashes"]["sha256"]}
+                    primary={result?.meta?.file_info?.sha256}
                     secondary="SHA256"
                   />
                 </ListItem>
@@ -536,7 +575,7 @@ export default function Result(props) {
               >
                 Analyze .eml hash
               </Button>
-              <Button
+              {/* <Button
                 variant="outlined"
                 disableElevation
                 size="small"
@@ -544,16 +583,15 @@ export default function Result(props) {
                 sx={{ float: "left", ml: 2 }}
               >
                 Analyze sender address
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
           {showHashAnalysisEml
-            ? hashAnalysisEml(result["eml_hashes"]["md5"])
+            ? hashAnalysisEml(result?.meta?.file_info?.md5)
             : null}
           {showEmailAnalyse &&
-          emailAnalyse(extractEmailAddress(result["basic_info"]["from"])) !=
-            null
-            ? emailAnalyse(extractEmailAddress(result["basic_info"]["from"]))
+          emailAnalyse(extractEmailAddress(result?.data?.links?.self)) != null
+            ? emailAnalyse(extractEmailAddress(result?.data?.links?.self))
             : null}
         </Card>
       </Grow>
@@ -564,7 +602,26 @@ export default function Result(props) {
           <h2>
             <VerifiedUserIcon /> Basic security checks
           </h2>
-          {showWarnings()}
+          {/* {showWarnings()} */}
+
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              Malicious — <strong>{stats?.malicious}</strong>
+            </Alert>
+            <Alert severity="warning">
+              <AlertTitle>Warning</AlertTitle>
+              Failure — <strong>{stats?.failure}</strong>
+            </Alert>
+            <Alert severity="info">
+              <AlertTitle>Info</AlertTitle>
+              Undetected — <strong>{stats?.undetected}</strong>
+            </Alert>
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              Harmless — <strong>{stats?.harmless}</strong>
+            </Alert>
+          </Stack>
         </Card>
       </Grow>
 
@@ -572,9 +629,114 @@ export default function Result(props) {
       <Grow in={true}>
         <Card key={"ema_attachements_card"} sx={card_style}>
           <h2>
-            <AttachFileIcon /> Attachments ({result["attachments"].length})
+            <AttachFileIcon /> Attachments ({result?.data?.links.length})
           </h2>
-          {showAttachements()}
+          {/* {showAttachements()} */}
+          <React.Fragment>
+          <TableContainer sx={tableContainerStyle}>
+            <Table aria-label="simple table" sx={tableCellStyle}>
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    sx={{ backgroundColor: theme.palette.background.tablecell }}
+                  >
+                    <Typography
+                      sx={{ flex: "1 1 100%" }}
+                      variant="h6"
+                      // id={row?.md5}
+                      component="div"
+                    >
+                      <b>
+                        {/* {row?.filename != null
+                          ? row?.filename */}
+                          File Analysis
+                      </b>
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    {" "}
+                    <b> MD5 </b>{" "}
+                  </TableCell>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    {" "}
+                    {result?.meta?.file_info?.md5}{" "}
+                  </TableCell>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    <Button
+                      variant="outlined"
+                      disableElevation
+                      size="small"
+                      onClick={() =>
+                        setShowHashAnalysisAttachements(
+                          !showHashAnalysisAttachements
+                        )
+                      }
+                      sx={{ float: "right" }}
+                    >
+                      Analyze
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    {" "}
+                    <b> SHA1 </b>{" "}
+                  </TableCell>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    {" "}
+                    {result?.meta?.file_info?.sha1}{" "}
+                  </TableCell>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    <Button
+                      variant="outlined"
+                      disableElevation
+                      size="small"
+                      onClick={() =>
+                        setShowHashAnalysisAttachements(
+                          !showHashAnalysisAttachements
+                        )
+                      }
+                      sx={{ float: "right" }}
+                    >
+                      Analyze
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    {" "}
+                    <b> SHA256 </b>{" "}
+                  </TableCell>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    {" "}
+                    {result?.meta?.file_info?.sha256}{" "}
+                  </TableCell>
+                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                    <Button
+                      variant="outlined"
+                      disableElevation
+                      size="small"
+                      onClick={() =>
+                        setShowHashAnalysisAttachements(
+                          !showHashAnalysisAttachements
+                        )
+                      }
+                      sx={{ float: "right" }}
+                    >
+                      Analyze
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {showHashAnalysisAttachements ? hashAnalysis(result?.meta?.file_info?.md5) : <></>}
+        </React.Fragment>
         </Card>
       </Grow>
 
@@ -582,19 +744,9 @@ export default function Result(props) {
       <Grow in={true}>
         <Card key={"ema_urls_card"} sx={card_style}>
           <h2>
-            <LinkIcon /> URLs in body ({result["urls"].length})
+            <LinkIcon /> URLs in body ({result?.links?.length})
           </h2>
           {showUrls()}
-        </Card>
-      </Grow>
-
-      {/* Hops card */}
-      <Grow in={true}>
-        <Card key={"ema_hops_card"} sx={card_style}>
-          <h2>
-            <RouteIcon /> Hops ({result["hops"].length})
-          </h2>
-          {showHops()}
         </Card>
       </Grow>
 
@@ -602,7 +754,7 @@ export default function Result(props) {
       <Grow in={true}>
         <Card key={"ema_file_header_card"} sx={card_style}>
           <h2>
-            <HorizontalSplitIcon /> Complete Header ({result["headers"].length}{" "}
+            <HorizontalSplitIcon /> Complete Header ({result?.results?.length}{" "}
             fields)
           </h2>
           {showHeaderFields()}
@@ -616,15 +768,15 @@ export default function Result(props) {
             <ChatIcon /> Message body (HTML sanitized)
           </h2>
           {expanded
-            ? dompurify.sanitize(result["message_text"], {
+            ? dompurify.sanitize(result?.id, {
                 USE_PROFILES: { html: false, svg: false, svgFilters: false },
               })
             : dompurify
-                .sanitize(result["message_text"], {
+                .sanitize(result?.id, {
                   USE_PROFILES: { html: false, svg: false, svgFilters: false },
                 })
                 .slice(0, 700)}
-          {dompurify.sanitize(result["message_text"], {
+          {dompurify.sanitize(result?.id, {
             USE_PROFILES: { html: false, svg: false, svgFilters: false },
           }).length > 700 ? (
             <Button onClick={toggleExpanded}>
@@ -636,7 +788,7 @@ export default function Result(props) {
       <br />
       <div align="center">
         <OpenAi
-          input={dompurify.sanitize(result["message_text"], {
+          input={dompurify.sanitize(result?.id, {
             USE_PROFILES: { html: false, svg: false, svgFilters: false },
           })}
         />
