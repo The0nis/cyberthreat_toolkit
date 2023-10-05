@@ -59,7 +59,7 @@ export default function Settings() {
       >
         <Tab label="General" />
         <Tab label="API Keys" />
-        <Tab label="Modules" />
+        {/* <Tab label="Modules" /> */}
         <Tab label="About" />
       </Tabs>
       <SettingsTabPanel value={tabIndex} index={0}>
@@ -72,12 +72,12 @@ export default function Settings() {
           <ApiKeys />
         </Card>
       </SettingsTabPanel>
-      <SettingsTabPanel value={tabIndex} index={2}>
+      {/* <SettingsTabPanel value={tabIndex} index={2}>
         <Card sx={cardStyle}>
           <Modules />
         </Card>
-      </SettingsTabPanel>
-      <SettingsTabPanel value={tabIndex} index={3}>
+      </SettingsTabPanel> */}
+      <SettingsTabPanel value={tabIndex} index={2}>
         <Card sx={cardStyle}>
           <About />
         </Card>

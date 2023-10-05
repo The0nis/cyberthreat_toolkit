@@ -9,6 +9,10 @@ import Introduction from "../Introduction";
 import Result from "./Result";
 
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
+import keys from "../../config/keys";
+import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "react-toastify";
 
 export default function FileUpload(props) {
   const theme = useTheme();
@@ -75,6 +79,7 @@ export default function FileUpload(props) {
   );
 
   const [file, setFile] = useState(" ");
+  const [isLoading, setisLoading] = useState(false);
 
   const [showResult, setShowResult] = useState(false);
   const handleShowResult = (event) => {
@@ -82,21 +87,48 @@ export default function FileUpload(props) {
   };
 
   function uploadFiles(file) {
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    let fd = new FormData();
-    fd.append("file", file);
-    api
-      .post(`/api/mailanalyzer/`, fd, config)
+    setisLoading(true);
+    const apiUrl = "https://www.virustotal.com/api/v3/files";
+    const apiKey = keys.REACT_APP_API_KEY_VIRUS_TOTAL; // Replace with your actual API key
+
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    const uploadConfig = {
+      headers: {
+        "x-apikey": apiKey,
+      },
+    };
+
+    // Step 1: Upload the file
+    axios
+      .post(apiUrl, formData, uploadConfig)
       .then((response) => {
-        const result = response.data;
+        const analysisId = response.data.data.id;
+        // Step 2: Use the extracted analysisId to fetch analysis data
+        const analysisUrl = `https://www.virustotal.com/api/v3/analyses/${analysisId}`;
+        const analysisConfig = {
+          headers: {
+            "x-apikey": apiKey,
+          },
+        };
+
+        return axios.get(analysisUrl, analysisConfig);
+      })
+      .then((analysisResponse) => {
+        setisLoading(false);
+        const result = analysisResponse.data;
+        // Process the analysis result as needed
         setFile(result);
         handleShowResult();
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
+        toast.error("An error occurred!", {
+          position: "top-right",
+        });
       });
   }
-  
 
   return (
     <div className="drop">
@@ -110,14 +142,22 @@ export default function FileUpload(props) {
       <div align="center">
         <br />
         {acceptedFileItems}
-        <Button
-          variant="contained"
-          disableElevation
-          size="large"
-          onClick={() => uploadFiles(acceptedFiles[0])}
-        >
-          Analyze
-        </Button>
+
+        {isLoading ? (
+          <div align="center">
+            <CircularProgress />
+          </div>
+        ) : (
+          <Button
+            variant="contained"
+            // disableElevation
+            size="large"
+            disabled={acceptedFileItems.length === 0 || isLoading}
+            onClick={() => uploadFiles(acceptedFiles[0])}
+          >
+            Analyze
+          </Button>
+        )}
         <br />
         <br />
       </div>

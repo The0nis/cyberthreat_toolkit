@@ -1,14 +1,17 @@
 import React from "react";
 import { useState } from "react";
 import dompurify from "dompurify";
+import moment from "moment";
 
 import Email from "../ioc-analyzer/Email.jsx";
 import Hash from "../ioc-analyzer/Hash.jsx";
 import OpenAi from "./ShowOpenAiAnswer.jsx";
 import Url from "../ioc-analyzer/Url.jsx";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 
 import Alert from "@mui/material/Alert";
-import { AlertTitle } from "@mui/material";
+
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -70,10 +73,15 @@ export default function Result(props) {
 
   const result = props.result;
 
+  console.log("result----", result);
+  const ioc = result?.meta?.file_info?.sha1;
+  const stats = result?.data?.attributes?.stats;
+  const results = result?.data?.attributes?.results;
+  console.log("results", results?.ALYac?.category);
+
   const [showHashAnalysisAttachements, setShowHashAnalysisAttachements] =
     React.useState(false);
   function hashAnalysis(props) {
-    const ioc = props;
     return (
       <>
         <br />
@@ -133,221 +141,10 @@ export default function Result(props) {
     }
   };
 
-  function showAttachements() {
-    if (result["attachments"].length > 0) {
-      return result["attachments"].map((row, index) => (
-        <React.Fragment key={index}>
-          <TableContainer sx={tableContainerStyle}>
-            <Table aria-label="simple table" sx={tableCellStyle}>
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    colSpan={3}
-                    sx={{ backgroundColor: theme.palette.background.tablecell }}
-                  >
-                    <Typography
-                      sx={{ flex: "1 1 100%" }}
-                      variant="h6"
-                      id={row.md5}
-                      component="div"
-                    >
-                      <b>
-                        {row.filename != null
-                          ? row.filename
-                          : "Unknown filename"}
-                      </b>
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    {" "}
-                    <b> MD5 </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    {" "}
-                    {row.md5}{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    <Button
-                      variant="outlined"
-                      disableElevation
-                      size="small"
-                      onClick={() =>
-                        setShowHashAnalysisAttachements(
-                          !showHashAnalysisAttachements
-                        )
-                      }
-                      sx={{ float: "right" }}
-                    >
-                      Analyze
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    {" "}
-                    <b> SHA1 </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    {" "}
-                    {row.sha1}{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    <Button
-                      variant="outlined"
-                      disableElevation
-                      size="small"
-                      onClick={() =>
-                        setShowHashAnalysisAttachements(
-                          !showHashAnalysisAttachements
-                        )
-                      }
-                      sx={{ float: "right" }}
-                    >
-                      Analyze
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    {" "}
-                    <b> SHA256 </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    {" "}
-                    {row.sha256}{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                    <Button
-                      variant="outlined"
-                      disableElevation
-                      size="small"
-                      onClick={() =>
-                        setShowHashAnalysisAttachements(
-                          !showHashAnalysisAttachements
-                        )
-                      }
-                      sx={{ float: "right" }}
-                    >
-                      Analyze
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {showHashAnalysisAttachements ? hashAnalysis(row.md5) : <></>}
-        </React.Fragment>
-      ));
-    } else {
-      return <p>No attachments found</p>;
-    }
-  }
-
-  function showWarnings() {
-    if (result["warnings"].length > 0) {
-      return (
-        <>
-          {result["warnings"].map((row, index) => (
-            <Alert
-              key={"ema_warnings_alert_" + index}
-              severity={
-                row["warning_tlp"] === "red"
-                  ? "error"
-                  : row["warning_tlp"] === "orange"
-                  ? "warning"
-                  : row["warning_tlp"] === "green"
-                  ? "success"
-                  : "info"
-              }
-              variant="filled"
-              sx={{ mt: 1, borderRadius: 5 }}
-            >
-              <AlertTitle>
-                <b>{row["warning_title"]}</b>
-              </AlertTitle>
-              {row["warning_message"]}
-            </Alert>
-          ))}
-        </>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function showHops() {
-    if (result["hops"] != null) {
-      return (
-        <>
-          <TableContainer component={Paper} sx={tableContainerStyle}>
-            <Table aria-label="simple table" sx={tableCellStyle}>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> Hop </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> From </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> By </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> With </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> Date / Time </b>{" "}
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {result["hops"].map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                      {row["number"]}
-                    </TableCell>
-                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                      {row["from"]}
-                    </TableCell>
-                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                      {row["by"]}
-                    </TableCell>
-                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                      {row["with"]}
-                    </TableCell>
-                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                      {row["date"]}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <p>Could not parse hops...</p>
-        </>
-      );
-    }
-  }
+  // console.log("stats", result?.data?.attributes?.stats);
 
   function showHeaderFields() {
-    if (result["headers"] != null) {
+    if (result?.results != null) {
       return (
         <>
           <TableContainer component={Paper} sx={tableContainerStyle}>
@@ -364,7 +161,7 @@ export default function Result(props) {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {Object.entries(result["headers"]).map((key, index) => (
+              {Object.entries(result?.results).map((key, index) => (
                 <React.Fragment key={index}>
                   <TableBody>
                     <TableRow
@@ -386,13 +183,13 @@ export default function Result(props) {
   }
 
   function showUrls() {
-    if (result["urls"].length > 0) {
+    if (result?.links?.length > 0) {
       return (
         <React.Fragment key="urls_fragment">
           <TableContainer component={Paper} sx={tableContainerStyle}>
             <Table aria-label="simple table" sx={tableCellStyle}>
               <TableBody>
-                {result["urls"].map((row, index) => (
+                {result?.links?.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
                       {row}
@@ -441,7 +238,10 @@ export default function Result(props) {
                     <PersonIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["from"]}
+                    // primary={result?.attributes?.date}
+                    primary={moment
+                      .unix(result?.data?.attributes?.date)
+                      .format("DD/MM/YYYY")}
                     secondary="From"
                   />
                 </ListItem>
@@ -452,8 +252,8 @@ export default function Result(props) {
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      result["basic_info"]["return-path"]
-                        ? result["basic_info"]["return-path"]
+                      result?.data?.meta?.file_info?.size
+                        ? result?.data?.meta?.file_info?.size
                         : "N/A"
                     }
                     secondary="Reply To"
@@ -465,7 +265,9 @@ export default function Result(props) {
                     <ThreePIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["to"]}
+                    primary={moment
+                      .unix(result?.data?.attributes?.date)
+                      .format("DD/MM/YYYY")}
                     secondary="To"
                   />
                 </ListItem>
@@ -475,7 +277,9 @@ export default function Result(props) {
                     <CalendarMonthIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["date"]}
+                    primary={moment
+                      .unix(result?.data?.attributes?.date)
+                      .format("DD/MM/YYYY")}
                     secondary="Date"
                   />
                 </ListItem>
@@ -485,7 +289,7 @@ export default function Result(props) {
                     <SubjectIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["basic_info"]["subject"]}
+                    primary={result?.data?.type}
                     secondary="Subject"
                   />
                 </ListItem>
@@ -502,7 +306,7 @@ export default function Result(props) {
                     <DescriptionIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["eml_hashes"]["md5"]}
+                    primary={result?.meta?.file_info?.md5}
                     secondary="MD5"
                   />
                 </ListItem>
@@ -512,7 +316,7 @@ export default function Result(props) {
                     <DescriptionIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["eml_hashes"]["sha1"]}
+                    primary={result?.meta?.file_info?.sha1}
                     secondary="SHA1"
                   />
                 </ListItem>
@@ -522,7 +326,7 @@ export default function Result(props) {
                     <DescriptionIcon />{" "}
                   </ListItemIcon>
                   <ListItemText
-                    primary={result["eml_hashes"]["sha256"]}
+                    primary={result?.meta?.file_info?.sha256}
                     secondary="SHA256"
                   />
                 </ListItem>
@@ -536,24 +340,14 @@ export default function Result(props) {
               >
                 Analyze .eml hash
               </Button>
-              <Button
-                variant="outlined"
-                disableElevation
-                size="small"
-                onClick={() => setShowEmailAnalyse(!showEmailAnalyse)}
-                sx={{ float: "left", ml: 2 }}
-              >
-                Analyze sender address
-              </Button>
             </Grid>
           </Grid>
           {showHashAnalysisEml
-            ? hashAnalysisEml(result["eml_hashes"]["md5"])
+            ? hashAnalysisEml(result?.meta?.file_info?.md5)
             : null}
           {showEmailAnalyse &&
-          emailAnalyse(extractEmailAddress(result["basic_info"]["from"])) !=
-            null
-            ? emailAnalyse(extractEmailAddress(result["basic_info"]["from"]))
+          emailAnalyse(extractEmailAddress(result?.data?.links?.self)) != null
+            ? emailAnalyse(extractEmailAddress(result?.data?.links?.self))
             : null}
         </Card>
       </Grow>
@@ -564,7 +358,26 @@ export default function Result(props) {
           <h2>
             <VerifiedUserIcon /> Basic security checks
           </h2>
-          {showWarnings()}
+          {/* {showWarnings()} */}
+
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              Malicious — <strong>{stats?.malicious}</strong>
+            </Alert>
+            <Alert severity="warning">
+              <AlertTitle>Warning</AlertTitle>
+              Failure — <strong>{stats?.failure}</strong>
+            </Alert>
+            <Alert severity="info">
+              <AlertTitle>Info</AlertTitle>
+              Undetected — <strong>{stats?.undetected}</strong>
+            </Alert>
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              Harmless — <strong>{stats?.harmless}</strong>
+            </Alert>
+          </Stack>
         </Card>
       </Grow>
 
@@ -572,9 +385,119 @@ export default function Result(props) {
       <Grow in={true}>
         <Card key={"ema_attachements_card"} sx={card_style}>
           <h2>
-            <AttachFileIcon /> Attachments ({result["attachments"].length})
+            <AttachFileIcon /> Attachments ({result?.data?.links.length})
           </h2>
-          {showAttachements()}
+          <React.Fragment>
+            <TableContainer sx={tableContainerStyle}>
+              <Table aria-label="simple table" sx={tableCellStyle}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      sx={{
+                        backgroundColor: theme.palette.background.tablecell,
+                      }}
+                    >
+                      <Typography
+                        sx={{ flex: "1 1 100%" }}
+                        variant="h6"
+                        // id={row?.md5}
+                        component="div"
+                      >
+                        <b>
+                          {/* {row?.filename != null
+                          ? row?.filename */}
+                          File Analysis
+                        </b>
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {" "}
+                      <b> MD5 </b>{" "}
+                    </TableCell>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {" "}
+                      {result?.meta?.file_info?.md5}{" "}
+                    </TableCell>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      <Button
+                        variant="outlined"
+                        disableElevation
+                        size="small"
+                        onClick={() =>
+                          setShowHashAnalysisAttachements(
+                            !showHashAnalysisAttachements
+                          )
+                        }
+                        sx={{ float: "right" }}
+                      >
+                        Analyze
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {" "}
+                      <b> SHA1 </b>{" "}
+                    </TableCell>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {" "}
+                      {result?.meta?.file_info?.sha1}{" "}
+                    </TableCell>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      <Button
+                        variant="outlined"
+                        disableElevation
+                        size="small"
+                        onClick={() =>
+                          setShowHashAnalysisAttachements(
+                            !showHashAnalysisAttachements
+                          )
+                        }
+                        sx={{ float: "right" }}
+                      >
+                        Analyze
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {" "}
+                      <b> SHA256 </b>{" "}
+                    </TableCell>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {" "}
+                      {result?.meta?.file_info?.sha256}{" "}
+                    </TableCell>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      <Button
+                        variant="outlined"
+                        disableElevation
+                        size="small"
+                        onClick={() =>
+                          setShowHashAnalysisAttachements(
+                            !showHashAnalysisAttachements
+                          )
+                        }
+                        sx={{ float: "right" }}
+                      >
+                        Analyze
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {showHashAnalysisAttachements ? (
+              hashAnalysis(result?.meta?.file_info?.md5)
+            ) : (
+              <></>
+            )}
+          </React.Fragment>
         </Card>
       </Grow>
 
@@ -582,32 +505,303 @@ export default function Result(props) {
       <Grow in={true}>
         <Card key={"ema_urls_card"} sx={card_style}>
           <h2>
-            <LinkIcon /> URLs in body ({result["urls"].length})
+            <LinkIcon /> URLs in body ({result?.data?.links?.length})
           </h2>
-          {showUrls()}
-        </Card>
-      </Grow>
-
-      {/* Hops card */}
-      <Grow in={true}>
-        <Card key={"ema_hops_card"} sx={card_style}>
-          <h2>
-            <RouteIcon /> Hops ({result["hops"].length})
-          </h2>
-          {showHops()}
+          {/* {showUrls()} */}
+          <React.Fragment key="urls_fragment">
+            <TableContainer component={Paper} sx={tableContainerStyle}>
+              <Table aria-label="simple table" sx={tableCellStyle}>
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {result?.data?.links?.self}
+                    </TableCell>
+                    <TableCell sx={{ overflowWrap: "anywhere" }}>
+                      <Button
+                        variant="outlined"
+                        disableElevation
+                        size="small"
+                        onClick={() => {
+                          setShowUrlAnalyse(!showUrlAnalyse);
+                          setUrl(result?.data?.links?.self);
+                        }}
+                        sx={{ float: "right", whiteSpace: "nowrap" }}
+                      >
+                        Analyze
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
+                      {result?.data?.links?.item}
+                    </TableCell>
+                    <TableCell sx={{ overflowWrap: "anywhere" }}>
+                      <Button
+                        variant="outlined"
+                        disableElevation
+                        size="small"
+                        onClick={() => {
+                          setShowUrlAnalyse(!showUrlAnalyse);
+                          setUrl(result?.data?.links?.item);
+                        }}
+                        sx={{ float: "right", whiteSpace: "nowrap" }}
+                      >
+                        Analyze
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {showUrlAnalyse ? urlAnalyse(url) : <></>}
+          </React.Fragment>
         </Card>
       </Grow>
 
       {/* Full header card */}
-      <Grow in={true}>
-        <Card key={"ema_file_header_card"} sx={card_style}>
-          <h2>
-            <HorizontalSplitIcon /> Complete Header ({result["headers"].length}{" "}
-            fields)
-          </h2>
-          {showHeaderFields()}
-        </Card>
-      </Grow>
+
+      {result?.data?.attributes?.status === "completed" && (
+        <Grow in={true}>
+          <Card key={"ema_file_header_card"} sx={card_style}>
+            <h2>
+              <HorizontalSplitIcon /> Complete Header (
+              {result?.data?.attributes?.results?.length} fields)
+            </h2>
+            {/* {showHeaderFields()} */}
+            <TableContainer component={Paper} sx={tableContainerStyle}>
+              <Table aria-label="simple table" sx={tableCellStyle}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left" sx={tableCellStyle}>
+                      <b>Engine Name</b>
+                    </TableCell>
+                    <TableCell align="left" sx={tableCellStyle}>
+                      <b>Category</b>
+                    </TableCell>
+                    <TableCell align="left" sx={tableCellStyle}>
+                      <b>Method</b>
+                    </TableCell>
+                    <TableCell align="left" sx={tableCellStyle}>
+                      <b>Engine Version</b>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <React.Fragment>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f0f8ff",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.ALYac?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.ALYac?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.ALYac?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.ALYac?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.Avast?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Avast?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Avast?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Avast?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.BitDefender?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.BitDefender?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.BitDefender?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.BitDefender?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f0f8ff",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.CrowdStrike?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.CrowdStrike?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.CrowdStrike?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.CrowdStrike?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.Fortinet?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Fortinet?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Fortinet?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Fortinet?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.Google?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Google?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Google?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Google?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.Kaspersky?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Kaspersky?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Kaspersky?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Kaspersky?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f0f8ff",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.Microsoft?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Microsoft?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Microsoft?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Microsoft?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.SUPERAntiSpyware?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.SUPERAntiSpyware?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.SUPERAntiSpyware?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.SUPERAntiSpyware?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f0f8ff",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.ZoneAlarm?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.ZoneAlarm?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.ZoneAlarm?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.ZoneAlarm?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow
+                      sx={{
+                        border: 0,
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      <TableCell align="left">
+                        {results?.Kingsoft?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Kingsoft?.engine_name}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Kingsoft?.method}
+                      </TableCell>
+                      <TableCell align="left">
+                        {results?.Kingsoft?.engine_version}
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </Grow>
+      )}
 
       {/* Message text card */}
       <Grow in={true}>
@@ -616,15 +810,15 @@ export default function Result(props) {
             <ChatIcon /> Message body (HTML sanitized)
           </h2>
           {expanded
-            ? dompurify.sanitize(result["message_text"], {
+            ? dompurify.sanitize(result?.data?.id, {
                 USE_PROFILES: { html: false, svg: false, svgFilters: false },
               })
             : dompurify
-                .sanitize(result["message_text"], {
+                .sanitize(result?.data?.id, {
                   USE_PROFILES: { html: false, svg: false, svgFilters: false },
                 })
                 .slice(0, 700)}
-          {dompurify.sanitize(result["message_text"], {
+          {dompurify.sanitize(result?.data?.id, {
             USE_PROFILES: { html: false, svg: false, svgFilters: false },
           }).length > 700 ? (
             <Button onClick={toggleExpanded}>
@@ -636,7 +830,7 @@ export default function Result(props) {
       <br />
       <div align="center">
         <OpenAi
-          input={dompurify.sanitize(result["message_text"], {
+          input={dompurify.sanitize(result?.data?.id, {
             USE_PROFILES: { html: false, svg: false, svgFilters: false },
           })}
         />
