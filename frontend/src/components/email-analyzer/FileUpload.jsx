@@ -11,6 +11,8 @@ import Result from "./Result";
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import keys from "../../config/keys";
 import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "react-toastify";
 
 export default function FileUpload(props) {
   const theme = useTheme();
@@ -77,38 +79,15 @@ export default function FileUpload(props) {
   );
 
   const [file, setFile] = useState(" ");
+  const [isLoading, setisLoading] = useState(false);
 
   const [showResult, setShowResult] = useState(false);
   const handleShowResult = (event) => {
     setShowResult(true);
   };
 
-  // function uploadFiles(file) {
-  //   const apiUrl = "/api/mailanalyzer";
-
-  //   const formData = new FormData();
-  //   formData.append("file", file, file.name);
-
-  //   const config = {
-  //     headers: {
-  //       "accept": "application/json",
-  //       "Content-Type": "multipart/form-data",
-  //     },
-  //     mode: "no-cors"
-  //   };
-
-  //   api
-  //     .post(apiUrl, formData, config)
-  //     .then((response) => {
-  //       const result = response.data;
-  //       setFile(result);
-  //       handleShowResult();
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
   function uploadFiles(file) {
+    setisLoading(true);
     const apiUrl = "https://www.virustotal.com/api/v3/files";
     const apiKey = keys.REACT_APP_API_KEY_VIRUS_TOTAL; // Replace with your actual API key
 
@@ -137,6 +116,7 @@ export default function FileUpload(props) {
         return axios.get(analysisUrl, analysisConfig);
       })
       .then((analysisResponse) => {
+        setisLoading(false);
         const result = analysisResponse.data;
         // Process the analysis result as needed
         setFile(result);
@@ -144,6 +124,9 @@ export default function FileUpload(props) {
       })
       .catch((error) => {
         console.error(error);
+        toast.error("An error occurred!", {
+          position: "top-right",
+        });
       });
   }
 
@@ -159,14 +142,22 @@ export default function FileUpload(props) {
       <div align="center">
         <br />
         {acceptedFileItems}
-        <Button
-          variant="contained"
-          disableElevation
-          size="large"
-          onClick={() => uploadFiles(acceptedFiles[0])}
-        >
-          Analyze
-        </Button>
+
+        {isLoading ? (
+          <div align="center">
+            <CircularProgress />
+          </div>
+        ) : (
+          <Button
+            variant="contained"
+            // disableElevation
+            size="large"
+            disabled={acceptedFileItems.length === 0 || isLoading}
+            onClick={() => uploadFiles(acceptedFiles[0])}
+          >
+            Analyze
+          </Button>
+        )}
         <br />
         <br />
       </div>
