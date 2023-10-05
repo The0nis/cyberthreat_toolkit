@@ -106,14 +106,12 @@ export default function Newsfeed() {
       setPage(1);
 
       const apiKey = keys.REACT_APP_API_KEY;
-          
 
-          
       const result = await axios.get(
-        // `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${apiKey}`
+        `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${apiKey}`
       );
       // Handle the response data
-      // console.log(result.data);
+
       setResult(result.data.articles);
       setLoading(false);
     } catch (error) {
