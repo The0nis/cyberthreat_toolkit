@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { atom, useSetRecoilState, useRecoilValue } from "recoil";
 import api from "./api";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";

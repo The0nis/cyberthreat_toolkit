@@ -51,35 +51,35 @@ export default function General() {
     borderRadius: 5,
   };
 
-  function handleDarkmodeChange() {
-    try {
-      if (!generalSettings.darkmode) {
-        api
-          .put("/api/settings/general/darkmode/?darkmode=true")
-          .then((response) => {
-            if (response.status === 200) {
-              setGeneralSettings({ ...generalSettings, darkmode: true });
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        api
-          .put("/api/settings/general/darkmode/?darkmode=false")
-          .then((response) => {
-            if (response.status === 200) {
-              setGeneralSettings({ ...generalSettings, darkmode: false });
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // function handleDarkmodeChange() {
+  //   try {
+  //     if (!generalSettings.darkmode) {
+  //       api
+  //         .put("/api/settings/general/darkmode/?darkmode=true")
+  //         .then((response) => {
+  //           if (response.status === 200) {
+  //             setGeneralSettings({ ...generalSettings, darkmode: true });
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.error(error);
+  //         });
+  //     } else {
+  //       api
+  //         .put("/api/settings/general/darkmode/?darkmode=false")
+  //         .then((response) => {
+  //           if (response.status === 200) {
+  //             setGeneralSettings({ ...generalSettings, darkmode: false });
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.error(error);
+  //         });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   return (
     <>

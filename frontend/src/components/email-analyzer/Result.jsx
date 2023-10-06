@@ -30,7 +30,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Paper from "@mui/material/Paper";
 import PersonIcon from "@mui/icons-material/Person";
 import ReplyIcon from "@mui/icons-material/Reply";
-import RouteIcon from "@mui/icons-material/Route";
 import SubjectIcon from "@mui/icons-material/Subject";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -105,7 +104,7 @@ export default function Result(props) {
     );
   }
 
-  const [showEmailAnalyse, setShowEmailAnalyse] = React.useState(false);
+  const [showEmailAnalyse, ] = React.useState(false);
   function emailAnalyse(props) {
     const ioc = props;
     return (
@@ -143,83 +142,7 @@ export default function Result(props) {
 
   // console.log("stats", result?.data?.attributes?.stats);
 
-  function showHeaderFields() {
-    if (result?.results != null) {
-      return (
-        <>
-          <TableContainer component={Paper} sx={tableContainerStyle}>
-            <Table aria-label="simple table" sx={tableCellStyle}>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> Keys </b>{" "}
-                  </TableCell>
-                  <TableCell align="left" sx={tableCellStyle}>
-                    {" "}
-                    <b> Value </b>{" "}
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              {Object.entries(result?.results).map((key, index) => (
-                <React.Fragment key={index}>
-                  <TableBody>
-                    <TableRow
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell align="left">{Object.keys(key[1])}</TableCell>
-                      <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                        {Object.values(key[1])}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </React.Fragment>
-              ))}
-            </Table>
-          </TableContainer>
-        </>
-      );
-    }
-  }
 
-  function showUrls() {
-    if (result?.links?.length > 0) {
-      return (
-        <React.Fragment key="urls_fragment">
-          <TableContainer component={Paper} sx={tableContainerStyle}>
-            <Table aria-label="simple table" sx={tableCellStyle}>
-              <TableBody>
-                {result?.links?.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="left" sx={{ overflowWrap: "anywhere" }}>
-                      {row}
-                    </TableCell>
-                    <TableCell sx={{ overflowWrap: "anywhere" }}>
-                      <Button
-                        variant="outlined"
-                        disableElevation
-                        size="small"
-                        onClick={() => {
-                          setShowUrlAnalyse(!showUrlAnalyse);
-                          setUrl(row);
-                        }}
-                        sx={{ float: "right", whiteSpace: "nowrap" }}
-                      >
-                        Analyze
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {showUrlAnalyse ? urlAnalyse(url) : <></>}
-        </React.Fragment>
-      );
-    } else {
-      return <p>No URLs found...</p>;
-    }
-  }
 
   return (
     <>
