@@ -4,12 +4,9 @@ import { useRecoilValue } from "recoil";
 import { modulesState } from "./App";
 import PropTypes from "prop-types";
 
-import AiAssistant from "./components/aiassistant/AiAssistant";
 import Analyzer from "./components/ioc-analyzer/Analyzer";
 import EmailAnalyzer from "./components/email-analyzer/EmailAnalyzer";
-import Extractor from "./components/ioc-extractor/Extractor";
 import Header from "./components/Header";
-import Monitoring from "./components/domain-monitoring/Monitoring";
 import Newsfeed from "./components/newsfeed/Newsfeed";
 import Settings from "./components/settings/Settings";
 

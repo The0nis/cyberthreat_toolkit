@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useRef } from "react";
-import api from "../../api";
 import { useDropzone } from "react-dropzone";
 
 import Button from "@mui/material/Button";

@@ -1,13 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import api from "../../api";
+// import api from "../../api";
 import he from "he";
 import axios from "axios";
 
 import { newsfeedState } from "../../App";
 
-import { Avatar, Box, CardContent, CardMedia } from "@mui/material";
+import { Avatar} from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grow from "@mui/material/Grow";

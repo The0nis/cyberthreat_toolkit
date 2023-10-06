@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import About from "./About";
 import ApiKeys from "./ApiKeys";
 import General from "./General";
-import Modules from "./Modules";
+// import Modules from "./Modules";
 
 import Card from "@mui/material/Card";
 import Tab from "@mui/material/Tab";
