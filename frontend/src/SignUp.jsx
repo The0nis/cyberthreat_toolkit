@@ -15,6 +15,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import keys from "./config/keys";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
+import useTheme from "@mui/material/styles/useTheme";
+import ot_logo_light from "./images/ot_logo_light.png";
+import ot_logo_dark from "./images/ot_logo_dark.png";
 
 function Copyright(props) {
   return (
@@ -39,6 +43,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const theme = useTheme();
+  const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
 
   const base_url = keys.BASE_URL;
@@ -64,6 +70,7 @@ export default function SignUp() {
     }
 
     try {
+      setIsLoading(true);
       const response = await fetch(`${base_url}/api/register`, {
         method: "POST",
         headers: {
@@ -76,17 +83,20 @@ export default function SignUp() {
       });
 
       const result = await response.json();
-      console.log(result);
+      setIsLoading(false);
+      // console.log(result);
       // Check for successful signup here
       if (response.ok) {
+        setIsLoading(false);
         toast.success("Registration Successfull");
         setTimeout(() => {
           history.push("/signin");
         }, 2000);
       }
     } catch (error) {
+      setIsLoading(false);
       toast.error("Registration Failled");
-      console.error("Error:", error);
+      // console.error("Error:", error);
     }
   };
 
@@ -102,9 +112,11 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <img
+            src={theme.palette.mode === "dark" ? ot_logo_dark : ot_logo_light}
+            height={80}
+            alt="Cyber Toolkit logo"
+          />
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
@@ -177,14 +189,38 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
+
+            {isLoading ? (
+              <Box
+                variant="contained"
+                sx={{
+                  height: 40,
+                  backgroundColor: "primary.dark",
+                  color: "primary.contrastText",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingBottom: "10px",
+                  paddingTop: "10px",
+                  transition: "all 0.3s",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    opacity: 0.9,
+                  },
+                }}
+              >
+                <CircularProgress color="inherit" size={20} />
+              </Box>
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up{" "}
+              </Button>
+            )}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">

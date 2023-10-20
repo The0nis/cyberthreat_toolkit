@@ -73,6 +73,7 @@ function Header() {
       toast.error("Unknown Error occurred");
       localStorage.removeItem("email");
       localStorage.removeItem("password");
+      localStorage.removeItem("isAuth");
       setTimeout(() => {
         history.push("/signin");
       }, 2000);
@@ -81,6 +82,8 @@ function Header() {
     handleClose();
     localStorage.removeItem("email");
     localStorage.removeItem("password");
+    localStorage.removeItem("isAuth");
+
     setTimeout(() => {
       history.push("/signin");
     }, 2000);

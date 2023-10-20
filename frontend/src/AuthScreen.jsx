@@ -21,9 +21,14 @@ const AuthScreen = ({ children }) => {
     return isAuth;
   };
 
-  const handleAuth = async () => {
-    const email = getEmailFromLocalStorage();
+  const email = getEmailFromLocalStorage();
 
+  if(!email){
+    localStorage.setItem("isAuth", "false");
+    history.push("/signin");
+  }
+
+  const handleAuth = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`${base_url}/api/check`, {

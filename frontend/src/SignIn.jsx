@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import useTheme from "@mui/material/styles/useTheme";
 import ot_logo_light from "./images/ot_logo_light.png";
 import ot_logo_dark from "./images/ot_logo_dark.png";
+import { CircularProgress } from "@mui/material";
 
 function Copyright(props) {
   return (
@@ -42,6 +43,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const [isLoading, setIsLoading] = React.useState(false);
   const theme = useTheme();
   const base_url = keys.BASE_URL;
   const history = useHistory();
@@ -51,7 +53,13 @@ export default function SignIn() {
     const email = data.get("email");
     const password = data.get("password");
 
+    if(!email || !password){
+      toast.error("Input Field must not be empty");
+      return
+    }
+
     try {
+      setIsLoading(true);
       const response = await fetch(`${base_url}/api/login`, {
         method: "POST",
         headers: {
@@ -66,15 +74,18 @@ export default function SignIn() {
       const result = await response.json();
       localStorage.setItem("email", email);
       localStorage.setItem("password", password);
-      console.log(result);
+      setIsLoading(false);
+      // console.log(result);
       // Check for successful signup here
       if (response.ok) {
         toast.success("Login Successfull");
+        setIsLoading(false);
         history.push("/main");
       }
     } catch (error) {
-      toast.error("Login Failled");
-      console.error("Error:", error);
+      toast.error("Login Failed");
+      // console.error("Error:", error);
+      setIsLoading(false);
     }
   };
 
@@ -90,15 +101,15 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1}}>
+       
             <img
               src={theme.palette.mode === "dark" ? ot_logo_dark : ot_logo_light}
               height={80}
               alt="Cyber Toolkit logo"
             />
-          </Avatar>
+     
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign In
           </Typography>
           <Box
             component="form"
@@ -130,14 +141,38 @@ export default function SignIn() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
-              type="submit"
-              fullWidth
+
+            {isLoading ? (
+              <Box
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                height: 40,
+                backgroundColor: 'primary.dark',
+                color: 'primary.contrastText',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                paddingBottom: "10px",
+                paddingTop: "10px",
+                transition: "all 0.3s",
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  opacity: 0.9,
+                },
+              }}
             >
-              Sign In
-            </Button>
+              <CircularProgress color="inherit" size={20}/>
+            </Box>
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In{" "}
+              </Button>
+            )}
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
