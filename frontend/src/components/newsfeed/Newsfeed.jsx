@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { newsfeedState } from "../../App";
 
-import { Avatar} from "@mui/material";
+import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grow from "@mui/material/Grow";
@@ -108,7 +108,7 @@ export default function Newsfeed() {
       const apiKey = keys.REACT_APP_API_KEY;
 
       const result = await axios.get(
-        `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${apiKey}`
+        `https://newsapi.org/v2/everything?domains=wsj.com&apiKey=${apiKey}`
       );
       // Handle the response data
 
