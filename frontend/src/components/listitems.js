@@ -37,10 +37,16 @@ export const mainListItems = (
       </Link>
     </ListItemButton>
     <ListItemButton>
+    <Link
+        color="inherit"
+        href="/createuser"
+        sx={{ display: "flex", textDecoration: "none" }}
+      >
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
       <ListItemText primary="Create Admin" />
+      </Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>

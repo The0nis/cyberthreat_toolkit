@@ -8,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Oreders from "./components/Orders/Oreders";
 import DashboardWrapper from "./components/DashboardWrapper/DashboardWrapper";
+import AdminCreateUser from "./components/AdminCreateUser/AdminCreateUser";
 
 function Copyright(props) {
   return (
@@ -45,6 +46,11 @@ export default function CreateUser() {
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
+          <Grid item xs={12}>
+              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                <AdminCreateUser />
+              </Paper>
+            </Grid>
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>

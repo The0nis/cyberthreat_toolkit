@@ -1,23 +1,30 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { atom, useSetRecoilState, useRecoilValue } from "recoil";
 import api from "./api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-
-import Main from "./Main";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
-import Dashboard from "./Dashboard";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import AuthScreen from "./AuthScreen";
-import User from "./User";
-import CreateUser from "./CreateUser";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
 
+// import Main from "./Main";
+// import SignIn from "./SignIn";
+// import SignUp from "./SignUp";
+// import Dashboard from "./Dashboard";
+// import User from "./User";
+// import CreateUser from "./CreateUser";
+
+const Main = React.lazy(() => import("./Main"));
+const SignUp = React.lazy(() => import("./SignUp"));
+const Dashboard = React.lazy(() => import("./Dashboard"));
+const User = React.lazy(() => import("./User"));
+const SignIn = React.lazy(() => import("./SignIn"));
+const CreateUser = React.lazy(() => import("./CreateUser"));
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -227,26 +234,35 @@ function App() {
           <ToastContainer position="top-right" autoClose={5000} />
           <ErrorBoundary>
             <Router>
-              <Switch>
-                <Route exact path="/main">
-                  <AuthScreen>
-                    <Main />
-                  </AuthScreen>
-                </Route>
-                <Route exact path="/signup" component={SignUp} />
-                <Route exact path="/dashboard">
-                  <AuthScreen>
-                    <Dashboard />
-                  </AuthScreen>
-                </Route>
-                <Route exact path="/user">
-                  <AuthScreen>
-                    <User/>
-                  </AuthScreen>
-                </Route>
-                <Route exact path="/signin" component={SignIn} />
-                <Route component={SignIn} />
-              </Switch>
+              <Suspense
+                fallback={
+                  <Box sx={{ width: "100%" }}>
+                    <LinearProgress />
+                  </Box>
+                }
+              >
+                <Switch>
+                  <Route exact path="/main">
+                    <AuthScreen>
+                      <Main />
+                    </AuthScreen>
+                  </Route>
+                  <Route exact path="/signup" component={SignUp} />
+                  <Route exact path="/dashboard">
+                    <AuthScreen>
+                      <Dashboard />
+                    </AuthScreen>
+                  </Route>
+                  <Route exact path="/user">
+                    <AuthScreen>
+                      <User />
+                    </AuthScreen>
+                  </Route>
+                  <Route exact path="/signin" component={SignIn} />
+                  <Route exact path="/createuser" component={CreateUser} />
+                  <Route component={SignIn} />
+                </Switch>
+              </Suspense>
             </Router>
           </ErrorBoundary>
         </ThemeProvider>

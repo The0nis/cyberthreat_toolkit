@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import keys from "../../config/keys";
-import {TableLoader} from "../Loader/Loader";
+import { TableLoader } from "../Loader/Loader";
 import moment from "moment";
 
 const columns = [
@@ -18,7 +18,17 @@ const columns = [
 export default function Oreders() {
   const base_url = keys.BASE_URL;
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState([
+    {
+      id: "",
+      email: "",
+      login: "",
+      role: "",
+      last_login: "",
+      update_at: "",
+      created_at: "",
+    },
+  ]);
 
   const getEmailFromLocalStorage = () => {
     const email = localStorage.getItem("email");
@@ -52,6 +62,7 @@ export default function Oreders() {
       // console.log("result from list---",result)
       setIsLoading(false);
     } catch (error) {
+      
     } finally {
       setIsLoading(false);
     }
@@ -60,6 +71,7 @@ export default function Oreders() {
   useEffect(() => {
     getUserList();
   }, []);
+
   console.log("result from list---", result);
 
   const rows = result?.map((item, index) => {
@@ -76,7 +88,7 @@ export default function Oreders() {
     };
   });
 
-  console.log("rows--", rows);
+  // console.log("rows--", rows);
   return (
     <div style={{ height: 400, width: "100%", marginBottom: "3rem" }}>
       {isLoading ? (
@@ -92,7 +104,7 @@ export default function Oreders() {
             Registered Users
           </Typography>
           <DataGrid
-            rows={rows ?? []}
+            rows={rows || []}
             columns={columns}
             initialState={{
               pagination: {
