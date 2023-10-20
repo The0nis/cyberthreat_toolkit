@@ -10,6 +10,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import Main from "./Main";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+import Dashboard from "./Dashboard";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -190,7 +195,8 @@ function App() {
 
   useEffect(() => {
     // Get state of API keys
-    api.get("/api/apikeys/is_active")
+    api
+      .get("/api/apikeys/is_active")
       .then((response) => {
         const result = response.data;
         setApiKeys(result);
@@ -201,9 +207,10 @@ function App() {
         console.error("Error fetching API keys:", error);
         // Optionally, you can set some state or show a notification to the user.
       });
-  
+
     // Get module settings
-    api.get("/api/settings/modules/")
+    api
+      .get("/api/settings/modules/")
       .then((response) => {
         const result = response?.data;
         setModules(result);
@@ -214,9 +221,10 @@ function App() {
         console.error("Error fetching module settings:", error);
         // Optionally, you can set some state or show a notification to the user.
       });
-  
+
     // Get general settings
-    api.get("/api/settings/general/")
+    api
+      .get("/api/settings/general/")
       .then((response) => {
         const result = response.data[0];
         setGeneralSettings(result);
@@ -228,9 +236,10 @@ function App() {
         console.error("Error fetching general settings:", error);
         // Optionally, you can set some state or show a notification to the user.
       });
-  
+
     // Get list of RSS feeds
-    api.get("/api/settings/modules/newsfeed/")
+    api
+      .get("/api/settings/modules/newsfeed/")
       .then((response) => {
         const result = response?.data;
         setNewsfeedList(result);
@@ -242,21 +251,28 @@ function App() {
         // Optionally, you can set some state or show a notification to the user.
       });
   }, [setApiKeys, setGeneralSettings, setModules, setNewsfeedList]);
-  
+
   if (
     modulesLoaded &&
     apikeyLoaded &&
     generalSettingsLoaded &&
     newsfeedListLoaded
-  ) 
-  {
+  ) {
     return (
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <ToastContainer position="top-right" autoClose={5000} />
           <ErrorBoundary>
-            <Main />
+            <Router>
+              <Switch>
+                <Route exact path="/main" component={Main} />
+                <Route exact path="/signup" component={SignUp} />
+                <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/signin" component={SignIn} />
+                <Route component={SignIn} />
+              </Switch>
+            </Router>
           </ErrorBoundary>
         </ThemeProvider>
       </ColorModeContext.Provider>
