@@ -15,6 +15,7 @@ import SignUp from "./SignUp";
 import Dashboard from "./Dashboard";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import AuthScreen from "./AuthScreen";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -152,46 +153,6 @@ function App() {
   // Update the theme only if the mode changes
   const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
-  // useEffect(() => {
-  //   // Get state of API keys
-  //   api.get("/api/apikeys/is_active").then((response) => {
-  //     const result = response.data;
-  //     setApiKeys(result);
-  //     setApikeyLoaded(true);
-  //   });
-
-  //   // Get module settings
-  //   api.get("/api/settings/modules/").then((response) => {
-  //     // const result = response.data.reduce((dict, item) => {
-  //     //   const { name, ...rest } = item;
-  //     //   dict[name] = rest;
-  //     //   return dict;
-  //     // }, {});
-  //     const result = response?.data;
-  //     setModules(result);
-  //     setModulesLoaded(true);
-  //   });
-
-  //   // Get general settings
-  //   api.get("/api/settings/general/").then((response) => {
-  //     const result = response.data[0];
-  //     setGeneralSettings(result);
-  //     setGeneralSettingsLoaded(true);
-  //     document.body.setAttribute("data-font", result.font);
-  //   });
-
-  //   // Get list of RSS feeds
-  //   api.get("/api/settings/modules/newsfeed/").then((response) => {
-  //     // const result = response.data.reduce((dict, item) => {
-  //     //   const { name, ...rest } = item;
-  //     //   dict[name] = rest;
-  //     //   return dict;
-  //     // }, {});
-  //     const result = response?.data;
-  //     setNewsfeedList(result);
-  //     setNewsfeedListLoaded(true);
-  //   });
-  // }, [setApiKeys, setGeneralSettings, setModules, setNewsfeedList]);
 
   useEffect(() => {
     // Get state of API keys
@@ -266,9 +227,17 @@ function App() {
           <ErrorBoundary>
             <Router>
               <Switch>
-                <Route exact path="/main" component={Main} />
+                <Route exact path="/main">
+                  <AuthScreen>
+                    <Main />
+                  </AuthScreen>
+                </Route>
                 <Route exact path="/signup" component={SignUp} />
-                <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/dashboard">
+                  <AuthScreen>
+                    <Dashboard />
+                  </AuthScreen>
+                </Route>
                 <Route exact path="/signin" component={SignIn} />
                 <Route component={SignIn} />
               </Switch>

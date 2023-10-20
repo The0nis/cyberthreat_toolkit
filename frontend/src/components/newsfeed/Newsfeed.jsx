@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { newsfeedState } from "../../App";
 
-import { Avatar} from "@mui/material";
+import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grow from "@mui/material/Grow";
