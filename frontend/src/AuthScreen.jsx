@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Loader from "./components/Loader/Loader";
 
 const AuthScreen = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const base_url = keys.BASE_URL;
   const history = useHistory();

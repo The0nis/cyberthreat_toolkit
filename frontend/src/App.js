@@ -13,9 +13,11 @@ import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import Dashboard from "./Dashboard";
-
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import AuthScreen from "./AuthScreen";
+import User from "./User";
+import CreateUser from "./CreateUser";
+
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -153,7 +155,6 @@ function App() {
   // Update the theme only if the mode changes
   const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
-
   useEffect(() => {
     // Get state of API keys
     api
@@ -236,6 +237,11 @@ function App() {
                 <Route exact path="/dashboard">
                   <AuthScreen>
                     <Dashboard />
+                  </AuthScreen>
+                </Route>
+                <Route exact path="/user">
+                  <AuthScreen>
+                    <User/>
                   </AuthScreen>
                 </Route>
                 <Route exact path="/signin" component={SignIn} />

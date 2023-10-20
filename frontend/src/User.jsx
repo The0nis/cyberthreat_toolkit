@@ -28,9 +28,9 @@ function Copyright(props) {
   );
 }
 
-export default function Dashboard() {
+export default function User() {
   return (
-    <DashboardWrapper title={"Dashboard"}>
+    <DashboardWrapper title={"User"}>
       <Box
         component="main"
         sx={{
@@ -46,20 +46,6 @@ export default function Dashboard() {
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12}>
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  height: 400,
-                }}
-              >
-                <Chart />
-              </Paper>
-            </Grid>
-
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>

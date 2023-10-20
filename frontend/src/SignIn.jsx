@@ -80,7 +80,11 @@ export default function SignIn() {
       if (response.ok) {
         toast.success("Login Successfull");
         setIsLoading(false);
-        history.push("/main");
+        if (email.endsWith('@alexdb.com')) {
+          history.push("/dashboard");
+        } else {
+          history.push("/main");
+        }
       }
     } catch (error) {
       toast.error("Login Failed");
