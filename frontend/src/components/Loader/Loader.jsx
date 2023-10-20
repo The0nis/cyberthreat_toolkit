@@ -1,7 +1,21 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
 import { CircularProgress } from "@mui/material";
+
+export const TableLoader = () => {
+  return (
+    <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+  );
+}
 
 const Loader = () => {
   return (
