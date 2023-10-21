@@ -53,14 +53,22 @@ export default function SignIn() {
     const email = data.get("email");
     const password = data.get("password");
 
-    if(!email || !password){
+    if (!email || !password) {
       toast.error("Input Field must not be empty");
-      return
+      return;
     }
 
     try {
       setIsLoading(true);
-      const response = await fetch(`${base_url}/api/login`, {
+      const responseGet = await fetch(`${base_url}/api/install?code=12`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const resultGet = await responseGet.json();
+
+      const responsePost = await fetch(`${base_url}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,20 +79,20 @@ export default function SignIn() {
         }),
       });
 
-      const result = await response.json();
+      const resultPost = await responsePost.json();
       localStorage.setItem("email", email);
       localStorage.setItem("password", password);
       setIsLoading(false);
       // console.log(result);
       // Check for successful signup here
-      if (response.ok) {
-        toast.success("Login Successfull");
-        setIsLoading(false);
-        if (email.endsWith('@alexdb.com')) {
-          history.push("/dashboard");
-        } else {
-          history.push("/main");
-        }
+
+      toast.success("Login Successfull");
+      setIsLoading(false);
+      if (email.endsWith("@alexdb.com")) {
+        localStorage.setItem("isAuth", "true");
+        history.push("/dashboard");
+      } else {
+        history.push("/main");
       }
     } catch (error) {
       toast.error("Login Failed");
@@ -105,13 +113,12 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-       
-            <img
-              src={theme.palette.mode === "dark" ? ot_logo_dark : ot_logo_light}
-              height={80}
-              alt="Cyber Toolkit logo"
-            />
-     
+          <img
+            src={theme.palette.mode === "dark" ? ot_logo_dark : ot_logo_light}
+            height={80}
+            alt="Cyber Toolkit logo"
+          />
+
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
@@ -148,25 +155,25 @@ export default function SignIn() {
 
             {isLoading ? (
               <Box
-              variant="contained"
-              sx={{
-                height: 40,
-                backgroundColor: 'primary.dark',
-                color: 'primary.contrastText',
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                paddingBottom: "10px",
-                paddingTop: "10px",
-                transition: "all 0.3s",
-                '&:hover': {
-                  backgroundColor: 'primary.main',
-                  opacity: 0.9,
-                },
-              }}
-            >
-              <CircularProgress color="inherit" size={20}/>
-            </Box>
+                variant="contained"
+                sx={{
+                  height: 40,
+                  backgroundColor: "primary.dark",
+                  color: "primary.contrastText",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingBottom: "10px",
+                  paddingTop: "10px",
+                  transition: "all 0.3s",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    opacity: 0.9,
+                  },
+                }}
+              >
+                <CircularProgress color="inherit" size={20} />
+              </Box>
             ) : (
               <Button
                 type="submit"
