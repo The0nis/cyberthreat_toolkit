@@ -113,7 +113,7 @@ export default function SignUp() {
           }}
         >
           <img
-            src={theme.palette.mode === "dark" ? ot_logo_dark : ot_logo_light}
+            src={ot_logo_light}
             height={80}
             alt="Cyber Toolkit logo"
           />
