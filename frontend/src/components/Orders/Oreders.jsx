@@ -6,8 +6,8 @@ import { TableLoader } from "../Loader/Loader";
 import moment from "moment";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "email", headerName: "Email", width: 130 },
+  { field: "id", headerName: "ID", width: 30 },
+  { field: "email", headerName: "Email", width: 200 },
   { field: "login", headerName: "Login", width: 70 },
   { field: "role", headerName: "Role", width: 70 },
   { field: "last_login", headerName: "Last Login", width: 240 },
